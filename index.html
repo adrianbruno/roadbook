@@ -2,607 +2,1067 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Europa 2026 — Adrián & Rosita</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1A2B4A">
+<title>Europa 2026</title>
 <style>
-:root{--cream:#F5EDD8;--parchment:#EDE0C4;--ink:#1C1208;--rust:#C04B1A;--gold:#D4922A;--navy:#1A2B4A;--sage:#5A7A5A;--warm:#FAF6EE;--muted:#888}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);font-size:15px;line-height:1.5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#1A2B4A;--rust:#C04B1A;--gold:#D4922A;--cream:#F5EDD8;--parchment:#EDE0C4;
+  --ink:#1C1208;--sage:#5A7A5A;--warm:#FAF6EE;--muted:#888;--border:#E5E0D5;
+  --safe-bottom:env(safe-area-inset-bottom,0px);--bar-h:56px;
+}
+html,body{height:100%;overflow:hidden}
+body{background:#F2EDE4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);font-size:15px}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 
-/* HERO */
-.hero{background:var(--navy);color:var(--cream);text-align:center;padding:2.5rem 1.5rem 2rem;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(255,255,255,.015) 30px,rgba(255,255,255,.015) 31px);pointer-events:none}
-.hero-badge{display:inline-block;border:1.5px solid var(--gold);color:var(--gold);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;padding:4px 14px;border-radius:2px;margin-bottom:1rem;text-transform:uppercase}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,7vw,4.5rem);font-weight:900;line-height:.95;letter-spacing:-.02em;margin-bottom:.5rem}
-.hero h1 em{font-style:italic;color:var(--gold);display:block}
-.hero-sub{font-size:13px;letter-spacing:.15em;text-transform:uppercase;opacity:.6;margin-top:.75rem;font-weight:300}
-.hero-stamps{display:flex;justify-content:center;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap}
-.stamp{border:1.5px solid rgba(255,255,255,.2);border-radius:4px;padding:5px 12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.7;font-family:'DM Mono',monospace}
+/* TOP BAR */
+.top-bar{background:var(--navy);color:white;padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding-top:max(12px,env(safe-area-inset-top))}
+.top-bar-title{font-size:17px;font-weight:600}
+.top-bar-sub{font-size:11px;opacity:.6;margin-top:1px}
+.edit-toggle{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
+.edit-toggle.active{background:var(--rust);border-color:var(--rust)}
 
-/* ROUTE BAR */
-.route-bar{background:var(--rust);color:var(--warm);display:flex;align-items:center;justify-content:center;padding:0 .5rem;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
-.route-bar::-webkit-scrollbar{display:none}
-.stop-name{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:9px 8px;white-space:nowrap}
-.stop-arrow{font-size:12px;opacity:.4;padding:0 1px;flex-shrink:0}
+/* EDIT BANNER */
+.edit-banner{background:var(--rust);color:white;padding:7px 16px;font-size:12px;font-weight:500;display:none;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
+.edit-banner.on{display:flex}
+.cm-open-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:white;padding:4px 12px;border-radius:14px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
 
-/* EDIT BAR */
-.edit-bar{background:var(--gold);color:var(--ink);text-align:center;padding:7px 1rem;font-size:12px;font-family:'DM Mono',monospace;letter-spacing:.05em;display:none;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
-.edit-bar.on{display:flex}
-.eb-btn{background:var(--ink);color:var(--cream);padding:4px 12px;border-radius:3px;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Mono',monospace;text-decoration:none;transition:opacity .15s}
-.eb-btn:hover{opacity:.8}
-.eb-btn.rust{background:var(--rust);color:white}
+/* SCREENS */
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding-bottom:calc(var(--bar-h) + var(--safe-bottom) + 8px);scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{display:block}
 
-/* LAYOUT */
-.wrap{max-width:920px;margin:0 auto;padding:0 1rem 3rem}
-.section-title{display:flex;align-items:center;gap:12px;padding:2rem 0 1rem}
-.section-title h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;white-space:nowrap}
-.section-title .line{flex:1;height:1px;background:linear-gradient(to right,var(--gold),transparent);opacity:.4}
-.sec-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--rust);letter-spacing:.1em}
+/* BOTTOM NAV */
+.bottom-nav{background:rgba(250,246,238,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;flex-shrink:0;padding-bottom:var(--safe-bottom);height:calc(var(--bar-h) + var(--safe-bottom))}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;cursor:pointer;border:none;background:none;color:var(--muted);transition:color .15s}
+.nav-btn.active{color:var(--navy)}
+.nav-icon{font-size:22px;line-height:1}
+.nav-label{font-size:10px;font-weight:500}
 
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:2rem}
-.stat-card{background:var(--warm);border:1px solid var(--parchment);border-radius:6px;padding:1rem;text-align:center;box-shadow:2px 2px 0 var(--parchment)}
-.stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--rust);line-height:1}
-.stat-lbl{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+/* CITY TABS */
+.city-tab-bar{display:flex;overflow-x:auto;scrollbar-width:none;padding:12px 16px 0;background:var(--warm);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;flex-shrink:0}
+.city-tab-bar::-webkit-scrollbar{display:none}
+.city-tab{flex-shrink:0;padding:8px 12px;border-radius:10px 10px 0 0;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s;font-family:inherit}
+.city-tab.active{color:var(--navy);border-bottom-color:var(--navy);background:rgba(26,43,74,.06)}
 
-/* COUNTRIES */
-.countries{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:2rem}
-.country-card{border:1px solid var(--parchment);border-radius:8px;overflow:hidden;background:var(--warm);box-shadow:3px 3px 0 var(--parchment)}
-.cc-head{padding:10px 14px;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px}
-.cc-head.es{background:var(--rust);color:var(--cream)}
-.cc-head.pt{background:var(--sage);color:var(--cream)}
-.cc-head.it{background:var(--navy);color:var(--cream)}
-.cc-city{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px dashed var(--parchment);font-size:13px}
-.cc-city:last-child{border-bottom:none}
-.cc-city-name{font-weight:500;min-width:70px}
-.cc-city-dates{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;flex:1}
-.cc-city-nights{font-size:10px;background:var(--parchment);color:#666;padding:2px 7px;border-radius:10px;font-family:'DM Mono',monospace;white-space:nowrap}
+/* DAY SECTIONS */
+.day-section{padding:0 0 12px}
+.day-header{padding:12px 16px 6px;display:flex;align-items:center;justify-content:space-between}
+.day-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.add-item-btn{display:none;background:rgba(192,75,26,.08);color:var(--rust);border:1px dashed var(--rust);border-radius:8px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:500;font-family:inherit}
+body.edit-mode .add-item-btn{display:inline-flex;align-items:center;gap:4px}
+.items-list{padding:0 12px;display:flex;flex-direction:column;gap:8px}
+.empty-day{padding:14px;text-align:center;color:#bbb;font-size:13px;font-style:italic}
 
-/* CALENDAR */
-.cal-box{background:var(--warm);border:1px solid var(--parchment);border-radius:8px;overflow:hidden;box-shadow:4px 4px 0 var(--parchment);margin-bottom:.5rem}
-.cal-month-hdr{background:var(--navy);color:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem}
-.cal-month-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
-.cal-month-year{font-family:'DM Mono',monospace;font-size:12px;opacity:.6;letter-spacing:.1em}
-.cal-legend{display:flex;flex-wrap:wrap;gap:7px;padding:8px 12px;border-bottom:1px solid var(--parchment);background:var(--cream)}
-.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#666;font-family:'DM Mono',monospace}
-.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-.day-headers{display:grid;grid-template-columns:repeat(7,1fr);background:var(--parchment)}
-.dh{text-align:center;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;color:var(--navy);font-family:'DM Mono',monospace}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--parchment)}
-.day-cell{background:var(--warm);min-height:82px;padding:5px 4px;cursor:pointer;transition:background .12s;overflow:hidden}
-.day-cell:hover{background:#FDF5E6}
-.day-cell.other{background:#F5EFE2;opacity:.5;cursor:default}
-.day-cell.selected{background:#FEF9F0;outline:2px solid var(--gold);outline-offset:-2px}
-.day-num{font-size:11px;font-weight:500;color:#aaa;margin-bottom:2px;font-family:'DM Mono',monospace}
-.day-cell.has-events .day-num{color:var(--ink)}
-.city-ribbon{font-size:9px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:1px 4px;border-radius:2px;margin-bottom:2px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.evt-pill{display:block;font-size:9px;padding:1px 4px;border-radius:2px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;line-height:1.5}
-
-/* TYPE COLORS */
-.t-fly{background:#DBEAFE;color:#1E3A5F}
-.t-train{background:#D1FAE5;color:#064E3B}
-.t-bus{background:#F3F4F6;color:#374151}
-.t-hotel{background:#FEF3C7;color:#713F12}
-.t-event{background:#FFE4D6;color:#7C2D12}
-.t-visit{background:#EDE9FE;color:#3730A3}
-.t-excursion{background:#FCE7F3;color:#831843}
-.t-restaurant{background:#ECFDF5;color:#065F46}
-.t-museum{background:#FFF7ED;color:#9A3412}
-.t-photo{background:#FDF4FF;color:#6B21A8}
-
-/* CITY RIBBONS */
-.city-madrid{background:#C04B1A;color:#FEF3C7}
-.city-lisboa{background:#1A6B45;color:#D1FAE5}
-.city-roma{background:#8B1A1A;color:#FFE4D6}
-.city-bari{background:#1A3A5C;color:#DBEAFE}
-.city-matera{background:#5C3A1A;color:#FEF3C7}
-.city-transit{background:#4B5563;color:#F3F4F6}
-
-/* DETAIL PANEL */
-.detail-panel{display:none;border:1px solid var(--parchment);border-top:3px solid var(--rust);border-radius:0 0 8px 8px;background:var(--warm);padding:1.25rem;animation:slideDown .18s ease}
-.detail-panel.open{display:block}
-@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.dp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--parchment)}
-.dp-date{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
-.dp-close{width:28px;height:28px;border-radius:50%;border:1px solid var(--parchment);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:#999;transition:all .15s}
-.dp-close:hover{background:var(--rust);color:white;border-color:var(--rust)}
-.evt-cards{display:grid;gap:10px}
-.evt-card{border:1px solid var(--parchment);border-radius:6px;padding:11px 13px 11px 16px;background:white;position:relative;overflow:hidden}
-.evt-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
-.evt-card.t-fly::before{background:#3B82F6}
-.evt-card.t-train::before{background:#10B981}
-.evt-card.t-bus::before{background:#6B7280}
-.evt-card.t-hotel::before{background:#F59E0B}
-.evt-card.t-event::before{background:var(--rust)}
-.evt-card.t-visit::before{background:#8B5CF6}
-.evt-card.t-excursion::before{background:#EC4899}
-.evt-card.t-restaurant::before{background:#059669}
-.evt-card.t-museum::before{background:#EA580C}
-.evt-card.t-photo::before{background:#9333EA}
-.ec-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.ec-title{font-weight:500;font-size:14px;color:var(--ink);line-height:1.3}
-.ec-status{font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:10px;flex-shrink:0;font-weight:500;white-space:nowrap}
+/* ITEM CARD */
+.item-card{background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);position:relative}
+.item-stripe{position:absolute;left:0;top:0;bottom:0;width:4px}
+.item-body{padding:12px 12px 12px 16px}
+.item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.item-title{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;flex:1}
+.item-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;flex-shrink:0;white-space:nowrap}
 .s-confirmed{background:#D1FAE5;color:#065F46}
 .s-pending{background:#FEF3C7;color:#92400E}
 .s-cancelled{background:#FEE2E2;color:#991B1B}
-.ec-rows{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px}
-.ec-lbl{color:#999;font-family:'DM Mono',monospace;font-size:11px;padding-top:1px;white-space:nowrap}
-.ec-val{color:var(--ink)}
-.maps-link{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:11px;font-weight:500;color:var(--rust);text-decoration:none;border:1px solid var(--rust);padding:3px 10px;border-radius:3px;font-family:'DM Mono',monospace;letter-spacing:.04em;transition:all .15s}
-.maps-link:hover{background:var(--rust);color:white}
-.edit-evt-btn{font-size:11px;padding:3px 10px;border-radius:3px;background:var(--parchment);border:none;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;color:var(--ink)}
-.add-to-day-btn{width:100%;margin-top:8px;padding:8px;border-radius:5px;border:1px dashed var(--parchment);background:transparent;cursor:pointer;font-size:12px;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
-.add-to-day-btn:hover{border-color:var(--rust);color:var(--rust)}
+.item-time{font-size:12px;color:var(--muted);margin-bottom:4px}
+.item-note{font-size:12px;color:#555;line-height:1.45}
+.item-address{font-size:11px;color:var(--muted);margin-top:5px}
+.maps-btn{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:11px;color:var(--rust);text-decoration:none;font-weight:500;border:1px solid var(--rust);padding:3px 10px;border-radius:6px;transition:all .15s}
+.maps-btn:hover{background:var(--rust);color:white}
+.item-edit-bar{display:none;background:#F8F4EE;padding:8px 12px 8px 16px;border-top:1px solid var(--border);gap:8px;align-items:center}
+body.edit-mode .item-edit-bar{display:flex}
+.ieb-btn{font-size:12px;padding:4px 10px;border-radius:6px;border:none;cursor:pointer;font-weight:500;font-family:inherit}
+.ieb-edit{background:var(--navy);color:white}
+.ieb-del{background:#FEE2E2;color:#991B1B}
 
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+/* SCREEN HEADER */
+.screen-header{padding:16px 16px 8px;background:var(--warm);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+.screen-header h2{font-size:18px;font-weight:700;color:var(--ink)}
+.screen-header p{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* HOTELS */
+.hotel-card{background:white;border-radius:14px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.hotel-head{padding:14px 14px 10px;border-bottom:1px solid var(--border)}
+.hotel-city-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:6px}
+.hotel-name{font-size:15px;font-weight:600;color:var(--ink)}
+.hotel-dates{font-size:12px;color:var(--muted);margin-top:2px}
+.hotel-body{padding:10px 14px}
+.hotel-rows{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.h-lbl{color:var(--muted);font-size:12px;padding-top:1px}
+.hotel-edit-bar{display:none;padding:8px 14px;border-top:1px solid var(--border);background:#F8F4EE;gap:8px}
+body.edit-mode .hotel-edit-bar{display:flex}
+.add-card-btn{display:none;width:calc(100% - 24px);margin:0 12px 12px;padding:12px;border-radius:12px;border:1.5px dashed var(--border);background:transparent;color:var(--muted);font-size:14px;cursor:pointer;font-family:inherit;transition:all .15s}
+body.edit-mode .add-card-btn{display:block}
+.add-card-btn:hover{border-color:var(--rust);color:var(--rust)}
+
+/* MAP */
+.map-intro{padding:16px;background:var(--warm);border-bottom:1px solid var(--border)}
+.map-point{background:white;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);text-decoration:none;color:inherit;margin-bottom:8px}
+.map-point:active{transform:scale(.98)}
+.map-pin{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.map-point-name{font-size:14px;font-weight:600;color:var(--ink)}
+.map-point-addr{font-size:12px;color:var(--muted);margin-top:1px}
+.map-sec-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:4px 0 6px}
+
+/* PHOTO */
+.photo-city-header{padding:14px 16px 8px;display:flex;align-items:center;gap:8px}
+.photo-city-name{font-size:17px;font-weight:700;color:var(--ink)}
+.prio-max{background:#FAECE7;color:#993C1D;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.prio-high{background:#EEEDFE;color:#3C3489;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.prio-med{background:#F3F4F6;color:#374151;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.photo-spot{background:white;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:8px}
+.ps-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.ps-name{font-size:14px;font-weight:600;color:var(--ink)}
+.ps-time{font-size:11px;padding:2px 8px;border-radius:8px;background:#D1FAE5;color:#065F46;white-space:nowrap;font-weight:500}
+.ps-desc{font-size:12px;color:#555;line-height:1.4}
+.ps-tip{font-size:11px;color:var(--gold);margin-top:4px;font-weight:500}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:var(--warm);border-radius:10px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.modal-hdr{background:var(--navy);color:var(--cream);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-radius:10px 10px 0 0;position:sticky;top:0}
-.modal-hdr-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
-.modal-x{background:none;border:none;color:var(--cream);font-size:20px;cursor:pointer;opacity:.7;padding:0 4px;line-height:1}
-.modal-x:hover{opacity:1}
-.modal-body{padding:1.25rem}
-.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding:1rem 1.25rem;border-top:1px solid var(--parchment)}
-.fg{margin-bottom:1rem}
-.fl{display:block;font-size:12px;font-weight:500;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-.fi,.fs,.ft{width:100%;padding:8px 10px;border:1px solid var(--parchment);border-radius:5px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;color:var(--ink);transition:border-color .15s}
-.fi:focus,.fs:focus,.ft:focus{outline:none;border-color:var(--rust)}
-.ft{resize:vertical;min-height:65px}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fhint{font-size:11px;color:var(--sage);margin-top:4px;font-family:'DM Mono',monospace}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:'DM Sans',sans-serif}
-.btn-primary{background:var(--rust);color:white}
-.btn-primary:hover{background:#A83A10}
-.btn-secondary{background:var(--parchment);color:var(--ink)}
-.btn-secondary:hover{background:var(--cream)}
-.btn-danger{background:#FEE2E2;color:#991B1B;font-size:12px;padding:6px 12px}
-.btn-danger:hover{background:#FECACA}
+.modal{background:white;border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding-bottom:var(--safe-bottom)}
+.modal-drag{width:36px;height:4px;background:#ddd;border-radius:2px;margin:10px auto 0}
+.modal-hdr{padding:14px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:white;z-index:1}
+.modal-title{font-size:16px;font-weight:600}
+.modal-x{width:28px;height:28px;border-radius:50%;background:#F2EDE4;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#666;line-height:1}
+.modal-body{padding:16px 20px}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+.fi,.fs,.ft{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;background:white;color:var(--ink);transition:border-color .15s;-webkit-appearance:none}
+.fi:focus,.fs:focus,.ft:focus{outline:none;border-color:var(--navy)}
+.ft{resize:vertical;min-height:70px}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fhint{font-size:11px;color:var(--sage);margin-top:4px}
+.btn-save{padding:13px;border-radius:12px;border:none;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;background:var(--navy);color:white;transition:background .15s}
+.btn-save:hover{background:#142240}
+.btn-cancel{padding:11px;border-radius:12px;border:none;font-size:14px;cursor:pointer;font-family:inherit;background:#F2EDE4;color:var(--ink)}
+.btn-del{padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;background:#FEE2E2;color:#991B1B}
+.type-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:6px}
+.type-opt{padding:8px 4px;border-radius:10px;border:1.5px solid var(--border);text-align:center;cursor:pointer;transition:all .15s;font-size:10px;color:var(--muted);font-weight:500;line-height:1.3}
+.type-opt.sel{border-color:var(--navy);background:rgba(26,43,74,.07);color:var(--navy)}
+.type-opt-icon{font-size:18px;display:block;margin-bottom:2px}
+.status-row{display:flex;gap:8px;margin-top:6px}
+.status-opt{flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--border);text-align:center;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);transition:all .15s}
+.status-opt.s-confirmed{border-color:#059669;background:#D1FAE5;color:#065F46}
+.status-opt.s-pending{border-color:#D97706;background:#FEF3C7;color:#92400E}
+
+/* CITY MANAGER */
+.cm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;justify-content:center}
+.cm-overlay.open{display:flex}
+.cm-sheet{background:#F2EDE4;border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:92vh;display:flex;flex-direction:column;padding-bottom:var(--safe-bottom)}
+.cm-hdr{padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;background:#F2EDE4;border-radius:20px 20px 0 0}
+.cm-title-text{font-size:16px;font-weight:700}
+.cm-x{width:28px;height:28px;border-radius:50%;background:white;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#666;line-height:1}
+.cm-body{flex:1;overflow-y:auto;padding:12px 16px;scrollbar-width:none}
+.cm-body::-webkit-scrollbar{display:none}
+.cm-sec{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:8px 0 6px}
+.cm-city-card{background:white;border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.cm-city-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none}
+.cm-city-flag-display{font-size:20px;flex-shrink:0}
+.cm-city-info{flex:1}
+.cm-city-name-txt{font-size:15px;font-weight:600;color:var(--ink)}
+.cm-city-days-count{font-size:12px;color:var(--muted);margin-top:1px}
+.cm-chevron{font-size:16px;color:#ccc;transition:transform .2s}
+.cm-chevron.open{transform:rotate(90deg)}
+.cm-city-body{display:none;border-top:1px solid var(--border);padding:12px 14px}
+.cm-city-body.open{display:block}
+.cm-row2{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.cm-flag-fi{width:48px;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:18px;text-align:center;background:white;font-family:inherit}
+.cm-name-fi{flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:500;background:white;font-family:inherit}
+.cm-flag-fi:focus,.cm-name-fi:focus{outline:none;border-color:var(--navy)}
+.cm-save-btn{padding:8px 14px;border-radius:8px;background:var(--navy);color:white;border:none;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:inherit}
+.cm-sub{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.cm-colors{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.cm-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.cm-swatch.sel{border-color:var(--ink) !important;transform:scale(1.2)}
+.cm-days{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.cm-day-row{display:flex;align-items:center;gap:7px;background:#F8F4EE;border-radius:8px;padding:7px 9px}
+.cm-day-label-fi{flex:1;border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--ink);outline:none;min-width:0}
+.cm-day-date-lbl{font-size:11px;color:var(--muted);font-family:monospace;flex-shrink:0}
+.cm-move-btn{background:none;border:none;font-size:16px;cursor:pointer;color:#bbb;padding:0;flex-shrink:0;line-height:1}
+.cm-move-btn:hover{color:var(--navy)}
+.cm-rm-btn{background:none;border:none;font-size:14px;cursor:pointer;color:#ddd;flex-shrink:0;line-height:1}
+.cm-rm-btn:hover{color:#EF4444}
+.cm-add-day{display:flex;gap:6px;margin-bottom:10px}
+.cm-date-fi{padding:7px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:white;font-family:inherit;width:128px;flex-shrink:0}
+.cm-label-fi{flex:1;padding:7px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:white;font-family:inherit;min-width:0}
+.cm-date-fi:focus,.cm-label-fi:focus{outline:none;border-color:var(--navy)}
+.cm-add-day-btn{padding:7px 12px;border-radius:8px;background:var(--sage);color:white;border:none;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:inherit}
+.cm-del-city{width:100%;padding:9px;border-radius:8px;background:#FEE2E2;color:#991B1B;border:none;font-size:13px;cursor:pointer;margin-top:4px;font-weight:500;font-family:inherit}
+.cm-new-card{background:white;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:16px}
+.cm-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0}
+.cm-done{width:100%;padding:13px;border-radius:12px;background:var(--navy);color:white;border:none;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* MOVE DAY POPUP */
+.move-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem}
+.move-card{background:var(--warm);border-radius:16px;padding:20px;width:100%;max-width:360px}
+.move-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.move-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.move-opt{width:100%;padding:12px;border-radius:10px;background:white;border:1px solid var(--border);font-size:14px;font-weight:500;cursor:pointer;margin-bottom:8px;text-align:left;font-family:inherit;transition:background .15s}
+.move-opt:hover{background:#F0EDE8}
+.move-cancel{width:100%;padding:10px;border-radius:10px;background:#F2EDE4;border:none;font-size:14px;cursor:pointer;font-family:inherit}
 
 /* TOAST */
-.toast{display:none;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:10px 20px;border-radius:20px;font-size:13px;z-index:9999;font-family:'DM Mono',monospace;white-space:nowrap}
-.toast.show{display:block;animation:fadeUp .2s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-/* FOOTER */
-footer{background:var(--navy);color:var(--cream);text-align:center;padding:2rem 1rem}
-footer p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;opacity:.8}
-footer small{font-size:11px;opacity:.4;display:block;margin-top:6px;font-family:'DM Mono',monospace;letter-spacing:.1em}
-footer a{color:var(--gold);text-decoration:none;opacity:.7}
-footer a:hover{opacity:1}
-
-@media(max-width:600px){.day-cell{min-height:62px;padding:3px 2px}.city-ribbon{display:none}.hero h1{font-size:2.2rem}.fr{grid-template-columns:1fr}}
+.toast{position:fixed;bottom:calc(var(--bar-h) + var(--safe-bottom) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:rgba(28,18,8,.9);color:white;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:500;z-index:400;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="edit-bar" id="edit-bar">
-  ✏️ MODO EDICIÓN
-  <button class="eb-btn rust" onclick="openModal(null,null)">+ Agregar ítem</button>
-  <button class="eb-btn" onclick="exportData()">⬇ Exportar data.js</button>
-  <button class="eb-btn" onclick="toggleEdit()">✕ Salir</button>
+  <div class="top-bar">
+    <div>
+      <div class="top-bar-title">🌍 Europa 2026</div>
+      <div class="top-bar-sub">Adrián & Rosita · 21 días</div>
+    </div>
+    <button class="edit-toggle" id="edit-toggle" onclick="toggleEdit()">✏️ Editar</button>
+  </div>
+
+  <div class="edit-banner" id="edit-banner">
+    <span>✏️ Modo edición</span>
+    <button class="cm-open-btn" onclick="openCM()">🏙 Gestionar ciudades y días</button>
+  </div>
+
+  <div class="screens">
+    <div class="screen active" id="s-itinerary"></div>
+    <div class="screen" id="s-map">
+      <div class="map-intro">
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">📍 Todos los puntos del viaje</div>
+        <div style="font-size:13px;color:var(--muted)">Tocá cualquier lugar para abrirlo en Google Maps</div>
+      </div>
+      <div style="padding:12px" id="map-content"></div>
+    </div>
+    <div class="screen" id="s-hotels">
+      <div class="screen-header"><h2>🏨 Hoteles</h2><p>Estado de reservas por ciudad</p></div>
+      <div style="padding:12px" id="hotels-content"></div>
+      <button class="add-card-btn" onclick="openHotelModal(null)">+ Agregar hotel</button>
+    </div>
+    <div class="screen" id="s-photo">
+      <div class="screen-header"><h2>📸 Guía fotográfica</h2><p>Spots con horarios recomendados</p></div>
+      <div id="photo-content"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchScreen('itinerary',this)"><span class="nav-icon">🗓</span><span class="nav-label">Itinerario</span></button>
+    <button class="nav-btn" onclick="switchScreen('map',this)"><span class="nav-icon">📍</span><span class="nav-label">Mapa</span></button>
+    <button class="nav-btn" onclick="switchScreen('hotels',this)"><span class="nav-icon">🏨</span><span class="nav-label">Hoteles</span></button>
+    <button class="nav-btn" onclick="switchScreen('photo',this)"><span class="nav-icon">📸</span><span class="nav-label">Fotos</span></button>
+  </nav>
 </div>
 
-<header class="hero">
-  <div class="hero-badge">Roadbook Oficial · Nov 2026</div>
-  <h1>Adrián<em>&amp; Rosita</em></h1>
-  <div class="hero-sub">por Europa · 21 días · 3 países · 7 ciudades</div>
-  <div class="hero-stamps">
-    <span class="stamp">🇪🇸 España</span>
-    <span class="stamp">🇵🇹 Portugal</span>
-    <span class="stamp">🇮🇹 Italia</span>
-    <span class="stamp">08 Nov — 29 Nov</span>
-  </div>
-</header>
-
-<nav class="route-bar">
-  <span class="stop-name">BUE</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Madrid</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Toledo</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Segovia</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Lisboa</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Sintra</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Roma</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Bari</span><span class="stop-arrow">›</span>
-  <span class="stop-name">Matera</span><span class="stop-arrow">›</span>
-  <span class="stop-name">BUE</span>
-</nav>
-
-<main class="wrap">
-
-  <div class="section-title">
-    <span class="sec-num">01</span><h2>El viaje de un vistazo</h2><div class="line"></div>
-  </div>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-val">21</div><div class="stat-lbl">días</div></div>
-    <div class="stat-card"><div class="stat-val">7</div><div class="stat-lbl">ciudades</div></div>
-    <div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">países</div></div>
-    <div class="stat-card"><div class="stat-val">2</div><div class="stat-lbl">eventos</div></div>
-    <div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">excursiones</div></div>
-  </div>
-
-  <div class="section-title">
-    <span class="sec-num">02</span><h2>Por país</h2><div class="line"></div>
-  </div>
-  <div class="countries">
-    <div class="country-card">
-      <div class="cc-head es">🇪🇸 España</div>
-      <div class="cc-city"><span class="cc-city-name">Madrid</span><span class="cc-city-dates">09–15 · 27–29 nov</span><span class="cc-city-nights">7 noches</span></div>
-      <div class="cc-city"><span class="cc-city-name">Toledo</span><span class="cc-city-dates">12 nov</span><span class="cc-city-nights">excursión</span></div>
-      <div class="cc-city"><span class="cc-city-name">Segovia</span><span class="cc-city-dates">13 nov</span><span class="cc-city-nights">excursión</span></div>
+<!-- ITEM MODAL -->
+<div class="modal-overlay" id="item-modal" onclick="if(event.target===this)closeItemModal()">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr">
+      <span class="modal-title" id="im-title-hdr">Agregar ítem</span>
+      <button class="modal-x" onclick="closeItemModal()">×</button>
     </div>
-    <div class="country-card">
-      <div class="cc-head pt">🇵🇹 Portugal</div>
-      <div class="cc-city"><span class="cc-city-name">Lisboa</span><span class="cc-city-dates">15–18 nov</span><span class="cc-city-nights">2 noches</span></div>
-      <div class="cc-city"><span class="cc-city-name">Sintra</span><span class="cc-city-dates">17 nov</span><span class="cc-city-nights">excursión</span></div>
+    <div class="modal-body">
+      <input type="hidden" id="im-id">
+      <input type="hidden" id="im-date">
+      <div class="fg"><label class="fl">Tipo</label><div class="type-grid" id="type-grid"></div></div>
+      <div class="fg"><label class="fl">Título</label><input type="text" id="im-title" class="fi" placeholder="Ej: Tren Madrid → Toledo"></div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Horario</label><input type="text" id="im-time" class="fi" placeholder="09:30"></div>
+        <div class="fg"><label class="fl">Estado</label><div class="status-row" id="im-status-row"></div></div>
+      </div>
+      <div class="fg"><label class="fl">Nota</label><textarea id="im-note" class="ft" placeholder="Detalles, recomendaciones..."></textarea></div>
+      <div class="fg"><label class="fl">Dirección</label><input type="text" id="im-address" class="fi" placeholder="Plaza Mayor, Madrid, España"></div>
+      <div class="fg"><label class="fl">Link Google Maps</label><input type="url" id="im-maps" class="fi" placeholder="Pegá la URL de Maps aquí"><div class="fhint">En Maps → Compartir → Copiar link → pegar acá</div></div>
     </div>
-    <div class="country-card">
-      <div class="cc-head it">🇮🇹 Italia</div>
-      <div class="cc-city"><span class="cc-city-name">Roma</span><span class="cc-city-dates">18–23 nov</span><span class="cc-city-nights">5 noches</span></div>
-      <div class="cc-city"><span class="cc-city-name">Bari</span><span class="cc-city-dates">23–24 nov</span><span class="cc-city-nights">1 noche</span></div>
-      <div class="cc-city"><span class="cc-city-name">Matera</span><span class="cc-city-dates">25–27 nov</span><span class="cc-city-nights">2 noches</span></div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="saveItem()">Guardar</button>
+      <button class="btn-cancel" onclick="closeItemModal()">Cancelar</button>
+      <button class="btn-del" id="im-del" onclick="deleteItem()" style="display:none">🗑 Eliminar</button>
     </div>
   </div>
+</div>
 
-  <div class="section-title">
-    <span class="sec-num">03</span><h2>Calendario</h2><div class="line"></div>
+<!-- HOTEL MODAL -->
+<div class="modal-overlay" id="hotel-modal" onclick="if(event.target===this)closeHotelModal()">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-hdr">
+      <span class="modal-title" id="hm-title-hdr">Agregar hotel</span>
+      <button class="modal-x" onclick="closeHotelModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="hm-id">
+      <div class="fg"><label class="fl">Ciudad</label><select id="hm-city" class="fs"><option value="madrid">🇪🇸 Madrid</option><option value="lisboa">🇵🇹 Lisboa</option><option value="roma">🇮🇹 Roma</option><option value="bari">🇮🇹 Bari</option><option value="matera">🇮🇹 Matera</option></select></div>
+      <div class="fg"><label class="fl">Nombre del hotel</label><input type="text" id="hm-name" class="fi" placeholder="Ej: Hotel NH Madrid"></div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Check-in</label><input type="date" id="hm-checkin" class="fi"></div>
+        <div class="fg"><label class="fl">Check-out</label><input type="date" id="hm-checkout" class="fi"></div>
+      </div>
+      <div class="fg"><label class="fl">Dirección</label><input type="text" id="hm-address" class="fi" placeholder="Dirección completa"></div>
+      <div class="fg"><label class="fl">Link Google Maps</label><input type="url" id="hm-maps" class="fi" placeholder="URL de Maps"></div>
+      <div class="fg"><label class="fl">Notas</label><textarea id="hm-note" class="ft" placeholder="Desayuno incluido, parking, etc..."></textarea></div>
+      <div class="fg"><label class="fl">Estado</label><div class="status-row" id="hm-status-row"></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="saveHotel()">Guardar</button>
+      <button class="btn-cancel" onclick="closeHotelModal()">Cancelar</button>
+      <button class="btn-del" id="hm-del" onclick="deleteHotel()" style="display:none">🗑 Eliminar</button>
+    </div>
   </div>
+</div>
 
-  <div class="cal-box">
-    <div class="cal-month-hdr">
-      <span class="cal-month-title">Noviembre</span>
-      <span class="cal-month-year">2026</span>
+<!-- CITY MANAGER -->
+<div class="cm-overlay" id="cm-overlay" onclick="if(event.target===this)closeCM()">
+  <div class="cm-sheet">
+    <div class="modal-drag" style="margin-bottom:0"></div>
+    <div class="cm-hdr">
+      <span class="cm-title-text">🏙 Ciudades y días</span>
+      <button class="cm-x" onclick="closeCM()">×</button>
     </div>
-    <div class="cal-legend">
-      <span class="leg"><span class="leg-dot t-fly"></span>Vuelo</span>
-      <span class="leg"><span class="leg-dot t-train"></span>Tren</span>
-      <span class="leg"><span class="leg-dot t-bus"></span>Bus</span>
-      <span class="leg"><span class="leg-dot t-hotel"></span>Hotel</span>
-      <span class="leg"><span class="leg-dot t-event"></span>Evento</span>
-      <span class="leg"><span class="leg-dot t-visit"></span>Visita</span>
-      <span class="leg"><span class="leg-dot t-excursion"></span>Excursión</span>
-      <span class="leg"><span class="leg-dot t-restaurant"></span>Restaurante</span>
-      <span class="leg"><span class="leg-dot t-photo"></span>📸 Foto</span>
-    </div>
-    <div class="day-headers">
-      <div class="dh">lun</div><div class="dh">mar</div><div class="dh">mié</div>
-      <div class="dh">jue</div><div class="dh">vie</div><div class="dh">sáb</div><div class="dh">dom</div>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cm-body" id="cm-body"></div>
+    <div class="cm-footer"><button class="cm-done" onclick="closeCM()">✓ Listo</button></div>
   </div>
-  <div class="detail-panel" id="detail-panel"></div>
-
-</main>
-
-<footer>
-  <p>"Il mondo è un libro, e chi non viaggia ne legge una sola pagina."</p>
-  <small>Roadbook Europa 2026 · Adrián &amp; Rosita · <a href="privado.html">🔒 Acceso privado</a></small>
-</footer>
+</div>
 
 <div class="toast" id="toast"></div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <div class="modal-hdr">
-      <span class="modal-hdr-title" id="modal-title">Agregar ítem</span>
-      <button class="modal-x" onclick="closeModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="edit-id">
-      <div class="fr">
-        <div class="fg">
-          <label class="fl">Fecha</label>
-          <input type="date" id="f-date" class="fi" min="2026-11-08" max="2026-11-29">
-        </div>
-        <div class="fg">
-          <label class="fl">Tipo</label>
-          <select id="f-type" class="fs">
-            <option value="fly">✈ Vuelo</option>
-            <option value="train">🚆 Tren</option>
-            <option value="bus">🚌 Bus</option>
-            <option value="hotel">🏨 Hotel</option>
-            <option value="event">⭐ Evento</option>
-            <option value="visit">🗺 Visita</option>
-            <option value="excursion">🥾 Excursión</option>
-            <option value="restaurant">🍽 Restaurante</option>
-            <option value="museum">🏛 Museo</option>
-            <option value="photo">📸 Foto spot</option>
-          </select>
-        </div>
-      </div>
-      <div class="fg">
-        <label class="fl">Título</label>
-        <input type="text" id="f-title" class="fi" placeholder="Ej: Tren Madrid → Toledo">
-      </div>
-      <div class="fr">
-        <div class="fg">
-          <label class="fl">Horario</label>
-          <input type="text" id="f-time" class="fi" placeholder="Ej: 09:30 salida">
-        </div>
-        <div class="fg">
-          <label class="fl">Estado</label>
-          <select id="f-status" class="fs">
-            <option value="confirmed">✓ Confirmado</option>
-            <option value="pending">◌ Pendiente</option>
-            <option value="cancelled">✕ Cancelado</option>
-          </select>
-        </div>
-      </div>
-      <div class="fg">
-        <label class="fl">Nota / descripción</label>
-        <textarea id="f-note" class="ft" placeholder="Detalles, recomendaciones, qué llevar..."></textarea>
-      </div>
-      <div class="fg">
-        <label class="fl">Dirección</label>
-        <input type="text" id="f-address" class="fi" placeholder="Ej: Plaza Mayor, Madrid, España">
-      </div>
-      <div class="fg">
-        <label class="fl">Link Google Maps</label>
-        <input type="url" id="f-maps" class="fi" placeholder="Pegá la URL de Google Maps aquí">
-        <div class="fhint">→ En Maps: Compartir → Copiar link → Pegar acá</div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger" id="btn-delete" onclick="deleteEvent()" style="display:none;margin-right:auto">🗑 Eliminar</button>
-      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveEvent()">Guardar</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// ═══════════════════════════════════════════════
-//  DATOS BASE DEL VIAJE
-//  Para actualizar: exportá desde privado.html
-//  y reemplazá el bloque EVENTS_BASE abajo
-// ═══════════════════════════════════════════════
-const EVENTS_BASE = {
-"2026-11-08":[{id:"e001",type:"fly",title:"Vuelo Buenos Aires → Madrid",time:"15:40 salida — Ezeiza",status:"confirmed",note:"Llevar Nikon Z5 + lentes en equipaje de mano. Llegada estimada 09 nov ~07:00 Madrid.",address:"Aeropuerto Internacional Ministro Pistarini, Ezeiza, Buenos Aires",maps:"https://maps.google.com/?q=Aeropuerto+Internacional+Ezeiza+Buenos+Aires"}],
-"2026-11-09":[{id:"e002",type:"fly",title:"Llegada Madrid — Terminal T4",time:"~07:00 llegada",status:"confirmed",note:"Terminal 4 Iberia. Metro Línea 8 directo al centro (~30 min).",address:"Aeropuerto Adolfo Suárez Madrid-Barajas, Terminal 4, Madrid",maps:"https://maps.google.com/?q=Aeropuerto+Barajas+Terminal+4+Madrid"},{id:"e003",type:"hotel",title:"Check-in Hotel Madrid",time:"Check-in desde 15:00",status:"pending",note:"Zona La Latina o Malasaña recomendada.",address:"La Latina, Madrid, España",maps:"https://maps.google.com/?q=La+Latina+Madrid+España"}],
-"2026-11-10":[{id:"e004",type:"visit",title:"Madrid Histórico",time:"Todo el día",status:"confirmed",note:"Plaza Mayor, Palacio Real, Catedral Almudena, Mercado San Miguel, La Latina.",address:"Plaza Mayor, Madrid, España",maps:"https://maps.google.com/?q=Plaza+Mayor+Madrid+España"},{id:"e005",type:"photo",title:"📸 Hora dorada — Plaza Mayor",time:"07:00 amanecer",status:"confirmed",note:"Llegar antes del amanecer. Sin turistas. Luz lateral perfecta para Nikon Z5.",address:"Plaza Mayor, Madrid, España",maps:"https://maps.google.com/?q=Plaza+Mayor+Madrid+España"}],
-"2026-11-11":[{id:"e006",type:"museum",title:"Museo del Prado o Reina Sofía",time:"10:00 — comprar entrada online",status:"pending",note:"Prado: Velázquez, Goya, El Bosco. Reina Sofía: Guernica. Elegir uno y disfrutarlo.",address:"Museo del Prado, Paseo del Prado 28, Madrid",maps:"https://maps.google.com/?q=Museo+del+Prado+Madrid"},{id:"e007",type:"visit",title:"Barrio Malasaña y Chueca",time:"Tarde",status:"confirmed",note:"Cafés, librerías vintage, street art. Ambiente auténtico madrileño.",address:"Malasaña, Madrid, España",maps:"https://maps.google.com/?q=Malasana+Madrid+España"}],
-"2026-11-12":[{id:"e008",type:"train",title:"Tren Madrid → Toledo (ida y vuelta)",time:"Mañana temprano",status:"pending",note:"AVE desde Atocha ~33 min. Comprar ida y vuelta. Regreso tarde para luz dorada.",address:"Estación Madrid Puerta de Atocha, Madrid",maps:"https://maps.google.com/?q=Estacion+Madrid+Puerta+de+Atocha"},{id:"e009",type:"excursion",title:"Toledo — Ciudad Imperial",time:"Todo el día",status:"confirmed",note:"Mirador del Valle al AMANECER (imperdible). Catedral Primada, Sinagoga del Tránsito.",address:"Mirador del Valle, Toledo, España",maps:"https://maps.google.com/?q=Mirador+del+Valle+Toledo+España"},{id:"e010",type:"photo",title:"📸 Mirador del Valle — Toledo",time:"PRIORIDAD MÁXIMA — amanecer",status:"confirmed",note:"El mejor mirador de España. Toledo con el río Tajo. 30 min antes del amanecer. Trípode.",address:"Mirador del Valle, Carretera de Circunvalación, Toledo",maps:"https://maps.google.com/?q=Mirador+del+Valle+Toledo"}],
-"2026-11-13":[{id:"e011",type:"train",title:"Tren Madrid → Segovia (ida y vuelta)",time:"Mañana temprano",status:"pending",note:"Renfe desde Chamartín ~28 min.",address:"Estación Madrid Chamartín, Madrid",maps:"https://maps.google.com/?q=Estacion+Madrid+Chamartin"},{id:"e012",type:"excursion",title:"Segovia — Acueducto y Alcázar",time:"Todo el día",status:"confirmed",note:"Acueducto Romano al amanecer (sin turistas). Alcázar, Catedral.",address:"Acueducto de Segovia, Plaza del Azoguejo, Segovia",maps:"https://maps.google.com/?q=Acueducto+Romano+Segovia+España"},{id:"e013",type:"restaurant",title:"Cochinillo segoviano — almuerzo",time:"14:00",status:"pending",note:"Mesón José María o Casa Duque. Reservar con anticipación.",address:"Mesón José María, Calle Cronista Lecea 11, Segovia",maps:"https://maps.google.com/?q=Meson+Jose+Maria+Segovia"}],
-"2026-11-14":[{id:"e014",type:"event",title:"MADRIKINA — Evento de Fotografía",time:"Todo el día — DÍA BLOQUEADO",status:"confirmed",note:"Evento fotográfico Madrikina. Sin otras actividades. Cargar baterías la noche anterior.",address:"Madrid, España",maps:"https://maps.google.com/?q=Madrid+España"}],
-"2026-11-15":[{id:"e015",type:"bus",title:"Traslado Madrid → Lisboa",time:"A definir — ~10 hs",status:"pending",note:"Bus directo Alsa ~10 hs ó Iryo hasta Badajoz + Comboios Portugal.",address:"Estación Sur de Autobuses, Méndez Álvaro, Madrid",maps:"https://maps.google.com/?q=Estacion+Sur+Autobuses+Madrid"},{id:"e016",type:"hotel",title:"Check-in Lisboa",time:"Llegada noche",status:"pending",note:"Zona Alfama o Chiado. Ideal a pie del Tramway 28.",address:"Alfama, Lisboa, Portugal",maps:"https://maps.google.com/?q=Alfama+Lisboa+Portugal"}],
-"2026-11-16":[{id:"e017",type:"photo",title:"📸 Miradouro das Portas do Sol",time:"07:00 amanecer — IMPERDIBLE",status:"confirmed",note:"Tejados rojos de Alfama con el río Tajo. Llegar 20 min antes.",address:"Miradouro das Portas do Sol, Alfama, Lisboa",maps:"https://maps.google.com/?q=Miradouro+das+Portas+do+Sol+Alfama+Lisboa"},{id:"e018",type:"visit",title:"Lisboa — Alfama y Belém",time:"Todo el día",status:"confirmed",note:"Castelo de São Jorge, Tramway 28, Torre de Belém, Pastéis de Belém originales.",address:"Castelo de São Jorge, Lisboa",maps:"https://maps.google.com/?q=Castelo+de+Sao+Jorge+Lisboa"},{id:"e019",type:"restaurant",title:"Fado en vivo — noche",time:"21:00",status:"pending",note:"Experiencia obligatoria. Restaurante con Fado en Alfama. Reservar con días de anticipación.",address:"Alfama, Lisboa, Portugal",maps:"https://maps.google.com/?q=Fado+Alfama+Lisboa"}],
-"2026-11-17":[{id:"e020",type:"train",title:"Tren Lisboa → Sintra",time:"Mañana temprano",status:"pending",note:"Comboios desde Estação do Rossio ~40 min. Sale cada 30 min.",address:"Estação do Rossio, Lisboa, Portugal",maps:"https://maps.google.com/?q=Estacao+do+Rossio+Lisboa"},{id:"e021",type:"excursion",title:"Sintra — Palacios y Misterio",time:"Todo el día",status:"confirmed",note:"Palácio da Pena (llegar 9:30 apertura). Quinta da Regaleira. Cabo da Roca al atardecer.",address:"Palácio Nacional da Pena, Sintra, Portugal",maps:"https://maps.google.com/?q=Palacio+Nacional+da+Pena+Sintra"},{id:"e022",type:"photo",title:"📸 Cabo da Roca — atardecer",time:"~17:30",status:"confirmed",note:"El punto más occidental de Europa. Acantilados sobre el Atlántico.",address:"Cabo da Roca, Sintra, Portugal",maps:"https://maps.google.com/?q=Cabo+da+Roca+Sintra+Portugal"}],
-"2026-11-18":[{id:"e023",type:"fly",title:"Vuelo Lisboa → Roma Fiumicino",time:"A confirmar — preferir mañana",status:"pending",note:"TAP, Ryanair o Vueling. Vuelo de mañana para aprovechar tarde en Roma.",address:"Aeroporto Humberto Delgado, Lisboa",maps:"https://maps.google.com/?q=Aeroporto+Lisboa+Humberto+Delgado"},{id:"e024",type:"hotel",title:"Check-in Roma",time:"Tarde",status:"pending",note:"ZONA: Trastevere o Monti. Evitar zona Vaticano (caro y turístico).",address:"Trastevere, Roma, Italia",maps:"https://maps.google.com/?q=Trastevere+Roma+Italia"}],
-"2026-11-19":[{id:"e025",type:"photo",title:"📸 Fontana di Trevi — amanecer",time:"06:30 — SIN TURISTAS",status:"confirmed",note:"A las 6:30 la Fontana di Trevi está vacía. La única oportunidad.",address:"Fontana di Trevi, Piazza di Trevi, Roma",maps:"https://maps.google.com/?q=Fontana+di+Trevi+Roma"},{id:"e026",type:"visit",title:"Coliseo y Foro Romano",time:"09:00 — comprar online",status:"pending",note:"COMPRAR ONLINE en coopculture.it. Evitar colas de 2 hs.",address:"Colosseo, Piazza del Colosseo, Roma",maps:"https://maps.google.com/?q=Colosseo+Roma"},{id:"e027",type:"visit",title:"Barrio Trastevere — tarde",time:"17:00",status:"confirmed",note:"El barrio más fotogénico de Roma. Callejuelas, gatos, luz dorada.",address:"Trastevere, Roma, Italia",maps:"https://maps.google.com/?q=Trastevere+Roma+Italia"}],
-"2026-11-20":[{id:"e028",type:"visit",title:"Museos Vaticanos y Capilla Sixtina",time:"08:00 apertura",status:"pending",note:"COMPRAR ONLINE en museivaticani.va. Entrar apenas abren para ver Sixtina sin multitudes.",address:"Musei Vaticani, Città del Vaticano",maps:"https://maps.google.com/?q=Musei+Vaticani+Roma"},{id:"e029",type:"photo",title:"📸 Gianicolo — panorámica Roma",time:"Atardecer ~17:00",status:"confirmed",note:"El mejor mirador de Roma. Vista 180° sobre toda la ciudad.",address:"Passeggiata del Gianicolo, Roma",maps:"https://maps.google.com/?q=Passeggiata+del+Gianicolo+Roma"},{id:"e030",type:"visit",title:"Piazza Navona y Campo de' Fiori",time:"Mañana",status:"confirmed",note:"Piazza Navona: Bernini. Campo de' Fiori: mercado matutino muy fotogénico.",address:"Piazza Navona, Roma, Italia",maps:"https://maps.google.com/?q=Piazza+Navona+Roma"}],
-"2026-11-21":[{id:"e031",type:"event",title:"Wild Country Roma — Día 1 🤠",time:"Todo el día — DÍA BLOQUEADO",status:"confirmed",note:"Evento country Roma. ENTRADA YA PAGADA.",address:"Roma, Italia",maps:"https://maps.google.com/?q=Roma+Italia"}],
-"2026-11-22":[{id:"e032",type:"event",title:"Wild Country Roma — Día 2 🤠",time:"Todo el día — DÍA BLOQUEADO",status:"confirmed",note:"Evento country Roma. ENTRADA YA PAGADA.",address:"Roma, Italia",maps:"https://maps.google.com/?q=Roma+Italia"}],
-"2026-11-23":[{id:"e033",type:"train",title:"Tren Roma → Bari — Frecciarossa",time:"Mañana",status:"pending",note:"Desde Roma Termini ~3.5 hs. Reservar en trenitalia.com.",address:"Roma Termini, Piazza dei Cinquecento, Roma",maps:"https://maps.google.com/?q=Roma+Termini"},{id:"e034",type:"hotel",title:"Check-in Bari",time:"Mediodía / tarde",status:"pending",note:"Zona Città Vecchia. A pie del puerto.",address:"Città Vecchia, Bari, Puglia, Italia",maps:"https://maps.google.com/?q=Citta+Vecchia+Bari+Italia"},{id:"e035",type:"visit",title:"Bari Vecchia — primera tarde",time:"Tarde / noche",status:"confirmed",note:"Laberinto de callejuelas. Las nonnas hacen orecchiette en la calle — foto imperdible.",address:"Bari Vecchia, Bari, Italia",maps:"https://maps.google.com/?q=Bari+Vecchia+Bari+Italia"}],
-"2026-11-24":[{id:"e036",type:"photo",title:"📸 Bari Vecchia — amanecer",time:"07:00",status:"confirmed",note:"Callejuelas blancas al amanecer. Sin turistas, solo pescadores y nonnas.",address:"Bari Vecchia, Bari, Italia",maps:"https://maps.google.com/?q=Bari+Vecchia+Bari"},{id:"e037",type:"visit",title:"Basílica San Nicola + Porto Vecchio",time:"Mañana",status:"confirmed",note:"Basílica románica impresionante. Puerto viejo, lungomare al atardecer.",address:"Basilica di San Nicola, Piazza San Nicola, Bari",maps:"https://maps.google.com/?q=Basilica+di+San+Nicola+Bari"},{id:"e038",type:"restaurant",title:"Orecchiette fresca — almuerzo",time:"13:00",status:"pending",note:"Trattoria familiar en Bari Vecchia, sin carta en inglés.",address:"Bari Vecchia, Bari, Italia",maps:"https://maps.google.com/?q=Bari+Vecchia+trattoria+Bari"}],
-"2026-11-25":[{id:"e039",type:"bus",title:"Bus/Auto Bari → Matera",time:"Mañana",status:"pending",note:"SITA Sud ~1.5 hs ó alquiler de auto (recomendado para libertad fotográfica).",address:"Stazione Autobus SITA, Via Capruzzi 1, Bari",maps:"https://maps.google.com/?q=Stazione+Autobus+SITA+Bari"},{id:"e040",type:"hotel",title:"Check-in Matera — en los Sassi",time:"Mediodía",status:"pending",note:"PRIORIDAD: hotel EN los Sassi. Dormir en gruta es una experiencia única en el mundo.",address:"Sassi di Matera, Matera, Basilicata, Italia",maps:"https://maps.google.com/?q=Sassi+di+Matera+Italia"},{id:"e041",type:"photo",title:"📸 Belvedere Murgia Timone — atardecer",time:"~17:30",status:"confirmed",note:"El mirador más famoso de Matera. Vista completa de los Sassi.",address:"Belvedere di Murgia Timone, Matera",maps:"https://maps.google.com/?q=Belvedere+di+Murgia+Timone+Matera"}],
-"2026-11-26":[{id:"e042",type:"photo",title:"📸 Matera — amanecer Belvedere",time:"06:30 — MÁXIMA PRIORIDAD",status:"confirmed",note:"El amanecer sobre los Sassi es una de las fotos más espectaculares de Europa. Trípode OBLIGATORIO.",address:"Belvedere di Murgia Timone, Matera",maps:"https://maps.google.com/?q=Belvedere+di+Murgia+Timone+Matera"},{id:"e043",type:"visit",title:"Matera — Sassi y cuevas",time:"Todo el día libre",status:"confirmed",note:"Perderse en los Sassi sin mapa. Iglesias rupestres, cuevas, vistas. Sin apuro.",address:"Sasso Caveoso, Matera, Basilicata",maps:"https://maps.google.com/?q=Sasso+Caveoso+Matera"},{id:"e044",type:"restaurant",title:"Cena en gruta — Matera",time:"20:30",status:"pending",note:"Restaurantes instalados en cuevas de los Sassi. Reservar con anticipación.",address:"Sasso Barisano, Matera, Basilicata",maps:"https://maps.google.com/?q=ristorante+grotta+Matera"},{id:"e045",type:"photo",title:"📸 Matera — fotografía nocturna",time:"21:00",status:"confirmed",note:"Matera de noche con iluminación cálida es ÚNICA. Trípode obligatorio.",address:"Piazza Vittorio Veneto, Matera",maps:"https://maps.google.com/?q=Piazza+Vittorio+Veneto+Matera"}],
-"2026-11-27":[{id:"e046",type:"bus",title:"Bus/Auto Matera → Bari Aeropuerto",time:"Mañana — con margen",status:"pending",note:"Matera→Bari ~1.5 hs + 2 hs antes del vuelo. Salir con tiempo.",address:"Matera, Basilicata, Italia",maps:"https://maps.google.com/?q=Matera+Basilicata+Italia"},{id:"e047",type:"fly",title:"Vuelo Bari → Madrid",time:"A confirmar",status:"pending",note:"Ryanair o Vueling directo ~2.5 hs.",address:"Aeroporto Karol Wojtyla di Bari",maps:"https://maps.google.com/?q=Aeroporto+Bari+Karol+Wojtyla"},{id:"e048",type:"hotel",title:"Check-in Madrid — últimas noches",time:"Tarde / noche",status:"pending",note:"Puede ser mismo hotel de llegada.",address:"Madrid, España",maps:"https://maps.google.com/?q=Madrid+Centro+España"}],
-"2026-11-28":[{id:"e049",type:"visit",title:"Madrid — día libre final",time:"Todo el día",status:"confirmed",note:"El Rastro (si es domingo). Compras finales. Barrio pendiente.",address:"El Rastro, La Latina, Madrid",maps:"https://maps.google.com/?q=El+Rastro+La+Latina+Madrid"},{id:"e050",type:"restaurant",title:"Cena final de celebración",time:"21:00",status:"pending",note:"Última cena europea. Barrio Salamanca o Chueca. Reservar.",address:"Barrio Salamanca, Madrid, España",maps:"https://maps.google.com/?q=Barrio+Salamanca+Madrid"}],
-"2026-11-29":[{id:"e051",type:"fly",title:"Vuelo Madrid → Buenos Aires ✈",time:"13:50 salida — llegar 3 hs antes",status:"confirmed",note:"Llegar a Barajas antes de las 11:00. ¡Volver con la tarjeta llena!",address:"Aeropuerto Adolfo Suárez Madrid-Barajas, Madrid",maps:"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid"}]
+// ══════════════════════════════════════════════
+//  DEFAULT DATA
+// ══════════════════════════════════════════════
+const DEFAULT_CITIES = [
+  {id:'madrid',name:'Madrid',flag:'🇪🇸',color:'#C04B1A',days:[
+    {date:'2026-11-09',label:'Dom 9 — Llegada'},
+    {date:'2026-11-10',label:'Lun 10 — Madrid histórico'},
+    {date:'2026-11-11',label:'Mar 11 — Madrid cultural'},
+    {date:'2026-11-12',label:'Mié 12 — Excursión Toledo'},
+    {date:'2026-11-13',label:'Jue 13 — Excursión Segovia'},
+    {date:'2026-11-14',label:'Vie 14 — Evento Madrikina'},
+  ]},
+  {id:'lisboa',name:'Lisboa',flag:'🇵🇹',color:'#1A6B45',days:[
+    {date:'2026-11-15',label:'Sáb 15 — Llegada'},
+    {date:'2026-11-16',label:'Dom 16 — Lisboa'},
+    {date:'2026-11-17',label:'Lun 17 — Excursión Sintra'},
+  ]},
+  {id:'roma',name:'Roma',flag:'🇮🇹',color:'#8B1A1A',days:[
+    {date:'2026-11-18',label:'Mar 18 — Llegada'},
+    {date:'2026-11-19',label:'Mié 19 — Roma libre'},
+    {date:'2026-11-20',label:'Jue 20 — Roma libre'},
+    {date:'2026-11-21',label:'Vie 21 — Wild Country 🤠'},
+    {date:'2026-11-22',label:'Sáb 22 — Wild Country 🤠'},
+  ]},
+  {id:'bari',name:'Bari',flag:'🇮🇹',color:'#1A3A5C',days:[
+    {date:'2026-11-23',label:'Dom 23 — Llegada'},
+    {date:'2026-11-24',label:'Lun 24 — Bari'},
+  ]},
+  {id:'matera',name:'Matera',flag:'🇮🇹',color:'#7C4A1A',days:[
+    {date:'2026-11-25',label:'Mar 25 — Llegada'},
+    {date:'2026-11-26',label:'Mié 26 — Matera 📸'},
+    {date:'2026-11-27',label:'Jue 27 — Regreso Madrid'},
+  ]},
+  {id:'fin',name:'Final',flag:'🇪🇸',color:'#1A2B4A',days:[
+    {date:'2026-11-28',label:'Vie 28 — Madrid final'},
+    {date:'2026-11-29',label:'Sáb 29 — Vuelo regreso ✈'},
+  ]},
+];
+
+const DEFAULT_EVENTS = {
+"2026-11-09":[{id:"e002",type:"fly",title:"Llegada Madrid T4",time:"~07:00",status:"confirmed",note:"Metro Línea 8 al centro ~30 min.",address:"Aeropuerto Barajas T4, Madrid",maps:"https://maps.google.com/?q=Aeropuerto+Barajas+Terminal+4+Madrid"},{id:"e003",type:"hotel",title:"Check-in Hotel Madrid",time:"Desde 15:00",status:"pending",note:"Zona La Latina o Malasaña.",address:"La Latina, Madrid",maps:"https://maps.google.com/?q=La+Latina+Madrid"}],
+"2026-11-10":[{id:"e004",type:"visit",title:"Madrid Histórico",time:"Todo el día",status:"confirmed",note:"Plaza Mayor, Palacio Real, Mercado San Miguel, La Latina.",address:"Plaza Mayor, Madrid",maps:"https://maps.google.com/?q=Plaza+Mayor+Madrid"},{id:"e005",type:"photo",title:"📸 Plaza Mayor — amanecer",time:"07:00",status:"confirmed",note:"Sin turistas, luz dorada. Nikon Z5.",address:"Plaza Mayor, Madrid",maps:"https://maps.google.com/?q=Plaza+Mayor+Madrid"}],
+"2026-11-11":[{id:"e006",type:"museum",title:"Museo del Prado o Reina Sofía",time:"10:00",status:"pending",note:"Comprar entradas online.",address:"Museo del Prado, Madrid",maps:"https://maps.google.com/?q=Museo+del+Prado+Madrid"},{id:"e007",type:"visit",title:"Barrio Malasaña",time:"Tarde",status:"confirmed",note:"Cafés, librerías vintage, ambiente auténtico.",address:"Malasaña, Madrid",maps:"https://maps.google.com/?q=Malasana+Madrid"}],
+"2026-11-12":[{id:"e008",type:"train",title:"Tren MAD → Toledo (ida/vuelta)",time:"Mañana",status:"pending",note:"AVE desde Atocha ~33 min. renfe.com",address:"Estación Atocha, Madrid",maps:"https://maps.google.com/?q=Estacion+Atocha+Madrid"},{id:"e009",type:"excursion",title:"Toledo — Ciudad Imperial",time:"Todo el día",status:"confirmed",note:"Mirador del Valle al amanecer. Catedral, Sinagoga del Tránsito.",address:"Mirador del Valle, Toledo",maps:"https://maps.google.com/?q=Mirador+del+Valle+Toledo"}],
+"2026-11-13":[{id:"e011",type:"train",title:"Tren MAD → Segovia (ida/vuelta)",time:"Mañana",status:"pending",note:"Renfe desde Chamartín ~28 min.",address:"Estación Chamartín, Madrid",maps:"https://maps.google.com/?q=Estacion+Chamartin+Madrid"},{id:"e012",type:"excursion",title:"Segovia — Acueducto y Alcázar",time:"Todo el día",status:"confirmed",note:"Acueducto al amanecer. Alcázar, Catedral.",address:"Acueducto Romano, Segovia",maps:"https://maps.google.com/?q=Acueducto+Romano+Segovia"},{id:"e013",type:"restaurant",title:"Cochinillo segoviano",time:"14:00",status:"pending",note:"Mesón José María o Casa Duque. Reservar.",address:"Mesón José María, Segovia",maps:"https://maps.google.com/?q=Meson+Jose+Maria+Segovia"}],
+"2026-11-14":[{id:"e014",type:"event",title:"MADRIKINA — Evento Fotografía",time:"Todo el día",status:"confirmed",note:"DÍA BLOQUEADO. Cargar baterías.",address:"Madrid",maps:"https://maps.google.com/?q=Madrid+España"}],
+"2026-11-15":[{id:"e015",type:"bus",title:"Traslado Madrid → Lisboa",time:"A definir",status:"pending",note:"Bus directo Alsa ~10 hs.",address:"Estación Sur Autobuses, Madrid",maps:"https://maps.google.com/?q=Estacion+Sur+Autobuses+Madrid"}],
+"2026-11-16":[{id:"e017",type:"photo",title:"📸 Miradouro das Portas do Sol",time:"07:00",status:"confirmed",note:"Tejados de Alfama con el Tajo.",address:"Miradouro das Portas do Sol, Lisboa",maps:"https://maps.google.com/?q=Miradouro+das+Portas+do+Sol+Lisboa"},{id:"e018",type:"visit",title:"Lisboa — Alfama y Belém",time:"Todo el día",status:"confirmed",note:"Castelo São Jorge, Tramway 28, Torre de Belém.",address:"Alfama, Lisboa",maps:"https://maps.google.com/?q=Alfama+Lisboa"},{id:"e019",type:"restaurant",title:"Fado en vivo",time:"21:00",status:"pending",note:"Reservar con días de anticipación.",address:"Alfama, Lisboa",maps:"https://maps.google.com/?q=Fado+Alfama+Lisboa"}],
+"2026-11-17":[{id:"e020",type:"train",title:"Tren Lisboa → Sintra",time:"Mañana",status:"pending",note:"Comboios desde Rossio ~40 min.",address:"Estação do Rossio, Lisboa",maps:"https://maps.google.com/?q=Estacao+do+Rossio+Lisboa"},{id:"e021",type:"excursion",title:"Sintra — Palacios y Misterio",time:"Todo el día",status:"confirmed",note:"Palácio da Pena, Quinta da Regaleira, Cabo da Roca.",address:"Palácio da Pena, Sintra",maps:"https://maps.google.com/?q=Palacio+da+Pena+Sintra"}],
+"2026-11-18":[{id:"e023",type:"fly",title:"Vuelo Lisboa → Roma",time:"A confirmar",status:"pending",note:"TAP, Ryanair o Vueling.",address:"Aeroporto Humberto Delgado, Lisboa",maps:"https://maps.google.com/?q=Aeroporto+Lisboa"}],
+"2026-11-19":[{id:"e025",type:"photo",title:"📸 Fontana di Trevi — amanecer",time:"06:30",status:"confirmed",note:"A las 6:30 está vacía.",address:"Fontana di Trevi, Roma",maps:"https://maps.google.com/?q=Fontana+di+Trevi+Roma"},{id:"e026",type:"visit",title:"Coliseo y Foro Romano",time:"09:00",status:"pending",note:"Comprar online en coopculture.it",address:"Colosseo, Roma",maps:"https://maps.google.com/?q=Colosseo+Roma"},{id:"e027",type:"visit",title:"Barrio Trastevere",time:"17:00",status:"confirmed",note:"El más fotogénico de Roma.",address:"Trastevere, Roma",maps:"https://maps.google.com/?q=Trastevere+Roma"}],
+"2026-11-20":[{id:"e028",type:"visit",title:"Museos Vaticanos",time:"08:00",status:"pending",note:"Comprar online en museivaticani.va",address:"Musei Vaticani, Roma",maps:"https://maps.google.com/?q=Musei+Vaticani+Roma"},{id:"e029",type:"photo",title:"📸 Gianicolo — panorámica",time:"17:00",status:"confirmed",note:"Mejor mirador de Roma, vista 180°.",address:"Gianicolo, Roma",maps:"https://maps.google.com/?q=Gianicolo+Roma"}],
+"2026-11-21":[{id:"e031",type:"event",title:"Wild Country Roma — Día 1 🤠",time:"Todo el día",status:"confirmed",note:"DÍA BLOQUEADO. Entrada pagada.",address:"Roma",maps:"https://maps.google.com/?q=Roma+Italia"}],
+"2026-11-22":[{id:"e032",type:"event",title:"Wild Country Roma — Día 2 🤠",time:"Todo el día",status:"confirmed",note:"DÍA BLOQUEADO. Entrada pagada.",address:"Roma",maps:"https://maps.google.com/?q=Roma+Italia"}],
+"2026-11-23":[{id:"e033",type:"train",title:"Tren Roma → Bari",time:"Mañana",status:"pending",note:"Frecciarossa desde Termini ~3.5 hs.",address:"Roma Termini",maps:"https://maps.google.com/?q=Roma+Termini"},{id:"e035",type:"visit",title:"Bari Vecchia — primera tarde",time:"Tarde",status:"confirmed",note:"Nonnas haciendo orecchiette en la calle.",address:"Bari Vecchia, Bari",maps:"https://maps.google.com/?q=Bari+Vecchia+Bari"}],
+"2026-11-24":[{id:"e036",type:"photo",title:"📸 Bari Vecchia — amanecer",time:"07:00",status:"confirmed",note:"Callejuelas blancas sin turistas.",address:"Bari Vecchia, Bari",maps:"https://maps.google.com/?q=Bari+Vecchia+Bari"},{id:"e037",type:"visit",title:"Basílica San Nicola + Puerto",time:"Mañana",status:"confirmed",note:"Basílica románica. Lungomare al atardecer.",address:"Basilica San Nicola, Bari",maps:"https://maps.google.com/?q=Basilica+San+Nicola+Bari"}],
+"2026-11-25":[{id:"e039",type:"bus",title:"Bus/Auto Bari → Matera",time:"Mañana",status:"pending",note:"SITA ~1.5 hs ó alquiler auto.",address:"Estación Bus, Bari",maps:"https://maps.google.com/?q=Stazione+Autobus+Bari"},{id:"e041",type:"photo",title:"📸 Belvedere Murgia Timone",time:"~17:30",status:"confirmed",note:"Vista completa de los Sassi al atardecer.",address:"Belvedere Murgia Timone, Matera",maps:"https://maps.google.com/?q=Belvedere+Murgia+Timone+Matera"}],
+"2026-11-26":[{id:"e042",type:"photo",title:"📸 Matera — amanecer Belvedere",time:"06:30 — MÁXIMA PRIORIDAD",status:"confirmed",note:"La foto más espectacular del viaje. Trípode.",address:"Belvedere Murgia Timone, Matera",maps:"https://maps.google.com/?q=Belvedere+Murgia+Timone+Matera"},{id:"e043",type:"visit",title:"Matera — Sassi y cuevas",time:"Todo el día",status:"confirmed",note:"Perderse sin mapa. Iglesias rupestres.",address:"Sasso Caveoso, Matera",maps:"https://maps.google.com/?q=Sasso+Caveoso+Matera"},{id:"e044",type:"restaurant",title:"Cena en gruta",time:"20:30",status:"pending",note:"Restaurantes en cuevas. Reservar.",address:"Sasso Barisano, Matera",maps:"https://maps.google.com/?q=ristorante+grotta+Matera"},{id:"e045",type:"photo",title:"📸 Matera nocturna",time:"21:00",status:"confirmed",note:"Iluminación cálida única. Trípode.",address:"Piazza Vittorio Veneto, Matera",maps:"https://maps.google.com/?q=Piazza+Vittorio+Veneto+Matera"}],
+"2026-11-27":[{id:"e047",type:"fly",title:"Vuelo Bari → Madrid",time:"A confirmar",status:"pending",note:"Ryanair o Vueling ~2.5 hs.",address:"Aeropuerto Bari",maps:"https://maps.google.com/?q=Aeroporto+Bari"}],
+"2026-11-28":[{id:"e049",type:"visit",title:"Madrid — día libre final",time:"Todo el día",status:"confirmed",note:"El Rastro, compras finales.",address:"El Rastro, Madrid",maps:"https://maps.google.com/?q=El+Rastro+Madrid"}],
+"2026-11-29":[{id:"e051",type:"fly",title:"Vuelo Madrid → Buenos Aires ✈",time:"13:50 — llegar 3 hs antes",status:"confirmed",note:"¡Volver con la tarjeta llena!",address:"Aeropuerto Barajas, Madrid",maps:"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid"}]
 };
 
-// ═══════════════════════════════════════════════
-//  LÓGICA DE LA APLICACIÓN
-// ═══════════════════════════════════════════════
-const SK = 'roadbook_europa_2026_pub';
+const DEFAULT_HOTELS = [
+  {id:"h001",city:"madrid",name:"Por confirmar",checkin:"2026-11-09",checkout:"2026-11-15",address:"La Latina o Malasaña, Madrid",maps:"https://maps.google.com/?q=La+Latina+Madrid",note:"Zona céntrica con Metro.",status:"pending"},
+  {id:"h002",city:"lisboa",name:"Por confirmar",checkin:"2026-11-15",checkout:"2026-11-18",address:"Alfama o Chiado, Lisboa",maps:"https://maps.google.com/?q=Alfama+Lisboa",note:"Cerca del Tramway 28.",status:"pending"},
+  {id:"h003",city:"roma",name:"Por confirmar",checkin:"2026-11-18",checkout:"2026-11-23",address:"Trastevere o Monti, Roma",maps:"https://maps.google.com/?q=Trastevere+Roma",note:"Evitar zona Vaticano.",status:"pending"},
+  {id:"h004",city:"bari",name:"Por confirmar",checkin:"2026-11-23",checkout:"2026-11-25",address:"Città Vecchia, Bari",maps:"https://maps.google.com/?q=Citta+Vecchia+Bari",note:"A pie del casco antiguo.",status:"pending"},
+  {id:"h005",city:"matera",name:"Por confirmar — en los Sassi",checkin:"2026-11-25",checkout:"2026-11-27",address:"Sassi di Matera",maps:"https://maps.google.com/?q=Sassi+di+Matera",note:"PRIORIDAD: dormir en gruta.",status:"pending"},
+  {id:"h006",city:"madrid",name:"Por confirmar (regreso)",checkin:"2026-11-27",checkout:"2026-11-29",address:"Madrid",maps:"https://maps.google.com/?q=Madrid",note:"Puede ser mismo hotel.",status:"pending"},
+];
 
-function loadEvents(){
-  const s = localStorage.getItem(SK);
-  if(s){ try{ return JSON.parse(s); }catch(e){} }
-  return JSON.parse(JSON.stringify(EVENTS_BASE));
+const DEFAULT_PHOTO = [
+  {city:"Matera",prio:"max",spots:[
+    {name:"Belvedere Murgia Timone",time:"Amanecer 06:30",desc:"La foto más espectacular del viaje.",tip:"Trípode. ISO 200, f/8.",maps:"https://maps.google.com/?q=Belvedere+Murgia+Timone+Matera"},
+    {name:"Piazza Vittorio Veneto",time:"Nocturna 21:00",desc:"Iluminación cálida única de Matera.",tip:"Trípode. Jugar con bokeh.",maps:"https://maps.google.com/?q=Piazza+Vittorio+Veneto+Matera"},
+    {name:"Sasso Caveoso",time:"Hora dorada tarde",desc:"Corazón de los Sassi. Texturas únicas.",tip:"Lente 35mm para callejuelas.",maps:"https://maps.google.com/?q=Sasso+Caveoso+Matera"},
+  ]},
+  {city:"Toledo",prio:"max",spots:[
+    {name:"Mirador del Valle",time:"Amanecer — IMPERDIBLE",desc:"Toledo con el río Tajo. El mejor de España.",tip:"30 min antes del amanecer. Trípode.",maps:"https://maps.google.com/?q=Mirador+del+Valle+Toledo"},
+    {name:"Calles medievales",time:"Mañana temprano",desc:"Callejuelas sin turistas ni autos.",tip:"Hora dorada lateral en el laberinto.",maps:"https://maps.google.com/?q=Toledo+casco+historico"},
+  ]},
+  {city:"Sintra",prio:"max",spots:[
+    {name:"Palácio da Pena",time:"Apertura 09:30",desc:"Colores únicos en el mundo.",tip:"Llegar en la apertura. En 30 min, buses.",maps:"https://maps.google.com/?q=Palacio+da+Pena+Sintra"},
+    {name:"Cabo da Roca",time:"Atardecer ~17:30",desc:"El fin del mundo europeo.",tip:"Luz dramática. Gran angular.",maps:"https://maps.google.com/?q=Cabo+da+Roca+Sintra"},
+  ]},
+  {city:"Segovia",prio:"max",spots:[
+    {name:"Acueducto Romano",time:"Amanecer",desc:"Luz lateral perfecta en los arcos.",tip:"Contraste de luz y sombra.",maps:"https://maps.google.com/?q=Acueducto+Romano+Segovia"},
+    {name:"Alcázar",time:"Tarde — hora dorada",desc:"Vista del castillo con la ciudad.",tip:"Desde el jardín exterior.",maps:"https://maps.google.com/?q=Alcazar+de+Segovia"},
+  ]},
+  {city:"Lisboa",prio:"alta",spots:[
+    {name:"Miradouro das Portas do Sol",time:"Amanecer 07:00",desc:"Tejados de Alfama con el río Tajo.",tip:"20 min antes. Poca gente.",maps:"https://maps.google.com/?q=Miradouro+Portas+do+Sol+Lisboa"},
+    {name:"Tramway 28 en Alfama",time:"Mañana temprano",desc:"La imagen icónica de Lisboa.",tip:"Buscar la curva en Alfama. Madrugar.",maps:"https://maps.google.com/?q=Alfama+Lisboa+tram+28"},
+  ]},
+  {city:"Bari",prio:"alta",spots:[
+    {name:"Bari Vecchia — callejuelas",time:"Amanecer 07:00",desc:"Blanco y cal sin turistas.",tip:"Nonnas con orecchiette — foto documental.",maps:"https://maps.google.com/?q=Bari+Vecchia+Bari"},
+    {name:"Porto Vecchio",time:"Amanecer / Atardecer",desc:"Barcos de pesca, luz sobre el agua.",tip:"Silhouettes al contraluz.",maps:"https://maps.google.com/?q=Porto+Vecchio+Bari"},
+  ]},
+  {city:"Roma",prio:"media",spots:[
+    {name:"Fontana di Trevi",time:"06:30 amanecer",desc:"La única forma de fotografiarla sola.",tip:"f/4, ISO 400 para el agua.",maps:"https://maps.google.com/?q=Fontana+di+Trevi+Roma"},
+    {name:"Gianicolo",time:"Atardecer ~17:00",desc:"Panorámica 180° de Roma.",tip:"70-200mm para comprimir ciudad.",maps:"https://maps.google.com/?q=Gianicolo+Roma"},
+  ]},
+];
+
+// ══════════════════════════════════════════════
+//  STORAGE
+// ══════════════════════════════════════════════
+const SK = { cities:'rb26_cities', events:'rb26_events', hotels:'rb26_hotels' };
+
+function load(key, def) {
+  const s = localStorage.getItem(key);
+  if (s) { try { return JSON.parse(s); } catch(e) {} }
+  return JSON.parse(JSON.stringify(def));
 }
-function persist(e){ localStorage.setItem(SK,JSON.stringify(e)); }
+function persist(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
-let EV = loadEvents();
+let CITIES = load(SK.cities, DEFAULT_CITIES);
+let EV     = load(SK.events, DEFAULT_EVENTS);
+let HO     = load(SK.hotels, DEFAULT_HOTELS);
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
 let editMode = false;
-let activeDate = null;
-let editingId = null;
-let editingDate = null;
+let activeCity = CITIES[0]?.id || 'madrid';
+let selType = 'visit', selStatus = 'pending', selHStatus = 'pending';
+let editItemId = null, editItemDate = null;
+let editHotelId = null;
+let newCityColor = '#5A7A5A';
 
-// Activar modo edición con ?edit=1 en la URL
-if(location.search.includes('edit=1') || location.hash==='#edit') setTimeout(()=>{ editMode=true; document.getElementById('edit-bar').classList.add('on'); renderCal(); },100);
+const COLORS = ['#C04B1A','#1A6B45','#8B1A1A','#1A3A5C','#7C4A1A','#5A7A5A','#6B4A9A','#1A5C5C','#9A4A1A','#2A4A8A'];
+const T_ICONS = {fly:'✈',train:'🚆',bus:'🚌',hotel:'🏨',event:'⭐',visit:'🗺',excursion:'🥾',restaurant:'🍽',museum:'🏛',photo:'📸'};
+const T_LABELS = {fly:'Vuelo',train:'Tren',bus:'Bus',hotel:'Hotel',event:'Evento',visit:'Visita',excursion:'Excursión',restaurant:'Restó',museum:'Museo',photo:'Foto'};
+const STRIPES = {fly:'#3B82F6',train:'#10B981',bus:'#9CA3AF',hotel:'#F59E0B',event:'#C04B1A',visit:'#8B5CF6',excursion:'#EC4899',restaurant:'#059669',museum:'#EA580C',photo:'#9333EA'};
 
-function toggleEdit(){
-  editMode=!editMode;
-  document.getElementById('edit-bar').classList.toggle('on',editMode);
-  renderCal();
-  toast(editMode?'✏️ Modo edición activo':'✓ Edición desactivada');
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function switchScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'map') renderMap();
 }
 
-// ── CALENDAR ──
-const CITY_MAP={
-  '2026-11-09':'madrid','2026-11-10':'madrid','2026-11-11':'madrid','2026-11-12':'madrid','2026-11-13':'madrid','2026-11-14':'madrid',
-  '2026-11-15':'lisboa','2026-11-16':'lisboa','2026-11-17':'lisboa',
-  '2026-11-18':'roma','2026-11-19':'roma','2026-11-20':'roma','2026-11-21':'roma','2026-11-22':'roma',
-  '2026-11-23':'bari','2026-11-24':'bari',
-  '2026-11-25':'matera','2026-11-26':'matera',
-  '2026-11-27':'transit','2026-11-28':'madrid','2026-11-29':'madrid'
-};
-const CITY_LBL={madrid:'Madrid',lisboa:'Lisboa',roma:'Roma',bari:'Bari',matera:'Matera',transit:'Tránsito'};
-const T_ICON={fly:'✈',train:'🚆',bus:'🚌',hotel:'🏨',event:'⭐',visit:'🗺',excursion:'🥾',restaurant:'🍽',museum:'🏛',photo:'📸'};
-const DAYS=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
+// ══════════════════════════════════════════════
+//  EDIT MODE
+// ══════════════════════════════════════════════
+function toggleEdit() {
+  editMode = !editMode;
+  const btn = document.getElementById('edit-toggle');
+  const banner = document.getElementById('edit-banner');
+  btn.textContent = editMode ? '✓ Listo' : '✏️ Editar';
+  btn.classList.toggle('active', editMode);
+  banner.classList.toggle('on', editMode);
+  document.body.classList.toggle('edit-mode', editMode);
+  renderItinerary();
+  renderHotels();
+  toast(editMode ? '✏️ Modo edición activo' : '✓ Cambios guardados');
+}
 
-function pad(n){return n<10?'0'+n:''+n;}
-function dk(d){return '2026-11-'+pad(d);}
+// ══════════════════════════════════════════════
+//  ITINERARY
+// ══════════════════════════════════════════════
+function renderItinerary() {
+  const screen = document.getElementById('s-itinerary');
+  const city = CITIES.find(c => c.id === activeCity) || CITIES[0];
+  if (!city) { screen.innerHTML = '<p style="padding:2rem;text-align:center;color:#aaa">Sin ciudades. Agregá una en Editar → Gestionar ciudades.</p>'; return; }
 
-function renderCal(){
-  const g=document.getElementById('cal-grid');
-  g.innerHTML='';
-  const off=6; // Nov 1 2026 = Sunday → 6 for Mon-start grid
-  [26,27,28,29,30,31].forEach(d=>{
-    const c=document.createElement('div');
-    c.className='day-cell other';
-    c.innerHTML='<div class="day-num">'+d+'</div>';
-    g.appendChild(c);
+  let html = '<div class="city-tab-bar">';
+  CITIES.forEach(c => {
+    const a = c.id === activeCity;
+    html += `<button class="city-tab${a?' active':''}" onclick="setCity('${c.id}')">${c.flag||'🏙'} ${c.name}</button>`;
   });
-  for(let d=1;d<=30;d++){
-    const k=dk(d);
-    const evts=EV[k]||[];
-    const city=CITY_MAP[k];
-    const c=document.createElement('div');
-    c.className='day-cell'+(evts.length?' has-events':'')+(k===activeDate?' selected':'');
-    let h='<div class="day-num">'+d+'</div>';
-    if(city) h+='<span class="city-ribbon city-'+city+'">'+CITY_LBL[city]+'</span>';
-    evts.slice(0,2).forEach(e=>{
-      const short=e.title.length>16?e.title.substring(0,15)+'…':e.title;
-      h+='<span class="evt-pill t-'+e.type+'">'+(T_ICON[e.type]||'•')+' '+short+'</span>';
-    });
-    if(evts.length>2) h+='<span class="evt-pill t-visit">+'+( evts.length-2)+' más</span>';
-    if(editMode) h+='<button onclick="event.stopPropagation();openModal(null,\''+k+'\')" style="display:block;width:100%;margin-top:2px;font-size:9px;padding:1px 0;border-radius:2px;background:#FEF3C7;color:#92400E;border:none;cursor:pointer">+ agregar</button>';
-    c.innerHTML=h;
-    c.addEventListener('click',()=>openDetail(d,EV[dk(d)]||[],dk(d)));
-    g.appendChild(c);
+  html += '</div>';
+
+  if (!city.days || !city.days.length) {
+    html += `<div style="padding:2rem;text-align:center;color:#aaa;font-style:italic">${editMode?'Tocá "Gestionar ciudades" para agregar días a '+city.name:'Sin días asignados a '+city.name}</div>`;
+    screen.innerHTML = html; return;
   }
-  const rem=(7-((off+30)%7))%7;
-  for(let d=1;d<=rem;d++){
-    const c=document.createElement('div');
-    c.className='day-cell other';
-    c.innerHTML='<div class="day-num">'+d+'</div>';
-    g.appendChild(c);
-  }
+
+  city.days.forEach(day => {
+    const evts = EV[day.date] || [];
+    html += `<div class="day-section">
+      <div class="day-header">
+        <span class="day-title">${day.label}</span>
+        <button class="add-item-btn" onclick="openItemModal(null,'${day.date}')">+ Agregar</button>
+      </div>
+      <div class="items-list">`;
+
+    if (!evts.length) {
+      html += `<div class="empty-day">${editMode ? 'Tocá + Agregar' : 'Sin ítems'}</div>`;
+    } else {
+      evts.forEach(e => {
+        const sc = e.status==='confirmed'?'s-confirmed':e.status==='cancelled'?'s-cancelled':'s-pending';
+        const st = e.status==='confirmed'?'✓ Confirmado':e.status==='cancelled'?'✕ Cancelado':'◌ Pendiente';
+        html += `<div class="item-card">
+          <div class="item-stripe" style="background:${STRIPES[e.type]||'#999'}"></div>
+          <div class="item-body">
+            <div class="item-top">
+              <div class="item-title">${T_ICONS[e.type]||'•'} ${e.title}</div>
+              <span class="item-status ${sc}">${st}</span>
+            </div>
+            ${e.time?`<div class="item-time">🕐 ${e.time}</div>`:''}
+            ${e.note?`<div class="item-note">${e.note}</div>`:''}
+            ${e.address?`<div class="item-address">📍 ${e.address}</div>`:''}
+            ${e.maps?`<a class="maps-btn" href="${e.maps}" target="_blank">🗺 Ver en Maps</a>`:''}
+          </div>
+          <div class="item-edit-bar">
+            <button class="ieb-btn ieb-edit" onclick="openItemModal('${e.id}','${day.date}')">✏️ Editar</button>
+            <button class="ieb-btn ieb-del" onclick="delItemConfirm('${e.id}','${day.date}')">🗑</button>
+          </div>
+        </div>`;
+      });
+    }
+    html += `</div></div>`;
+  });
+  screen.innerHTML = html;
+  screen.scrollTop = 0;
 }
 
-// ── DETAIL ──
-function openDetail(d,evts,k){
-  activeDate=k;
-  document.querySelectorAll('.day-cell').forEach(c=>c.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-  const panel=document.getElementById('detail-panel');
-  const dow=DAYS[(new Date(2026,10,d).getDay()+6)%7];
-  let h='<div class="dp-header"><div class="dp-date">'+dow.charAt(0).toUpperCase()+dow.slice(1)+', '+d+' de noviembre 2026</div><button class="dp-close" onclick="closeDetail()">×</button></div><div class="evt-cards">';
-  if(!evts.length){
-    h+='<p style="font-size:13px;color:#aaa;font-style:italic;text-align:center;padding:1rem 0">Sin eventos para este día.</p>';
-  } else {
-    evts.forEach(e=>{
-      const sc=e.status==='confirmed'?'s-confirmed':e.status==='cancelled'?'s-cancelled':'s-pending';
-      const st=e.status==='confirmed'?'✓ Confirmado':e.status==='cancelled'?'✕ Cancelado':'◌ Pendiente';
-      const editBtn=editMode?'<button class="edit-evt-btn" onclick="openModal(\''+e.id+'\',\''+k+'\')">✏️ Editar</button>':'';
-      h+=`<div class="evt-card t-${e.type}">
-        <div class="ec-head"><div class="ec-title">${T_ICON[e.type]||'•'} ${e.title}</div><span class="ec-status ${sc}">${st}</span></div>
-        <div class="ec-rows">
-          <span class="ec-lbl">Horario</span><span class="ec-val">${e.time||'—'}</span>
-          ${e.note?'<span class="ec-lbl">Nota</span><span class="ec-val">'+e.note+'</span>':''}
-          ${e.address?'<span class="ec-lbl">Dirección</span><span class="ec-val">'+e.address+'</span>':''}
+function setCity(id) { activeCity = id; renderItinerary(); }
+
+// ══════════════════════════════════════════════
+//  MAP
+// ══════════════════════════════════════════════
+function renderMap() {
+  const container = document.getElementById('map-content');
+  const byCity = {};
+  for (const [date, evts] of Object.entries(EV)) {
+    evts.forEach(e => {
+      if (!e.maps) return;
+      const cid = cityForDate(date);
+      if (!byCity[cid]) byCity[cid] = [];
+      byCity[cid].push({ name: e.title, addr: e.address||'', maps: e.maps, icon: T_ICONS[e.type]||'📍' });
+    });
+  }
+  HO.forEach(h => {
+    if (!h.maps) return;
+    if (!byCity[h.city]) byCity[h.city] = [];
+    byCity[h.city].push({ name: '🏨 ' + h.name, addr: h.address||'', maps: h.maps, icon: '🏨' });
+  });
+
+  let html = '';
+  CITIES.forEach(c => {
+    const pts = byCity[c.id];
+    if (!pts || !pts.length) return;
+    html += `<div class="map-sec-title" style="color:${c.color||'var(--muted)'}">${c.flag||'🏙'} ${c.name}</div>`;
+    pts.forEach(p => {
+      html += `<a class="map-point" href="${p.maps}" target="_blank">
+        <div class="map-pin" style="background:${c.color||'#888'}22;color:${c.color||'#888'}">${p.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div class="map-point-name">${p.name.replace(/[✈🚆🚌🏨⭐🗺🥾🍽🏛📸]/g,'').trim()}</div>
+          ${p.addr?`<div class="map-point-addr">${p.addr}</div>`:''}
         </div>
-        ${e.maps?'<a class="maps-link" href="'+e.maps+'" target="_blank">📍 Ver en Google Maps</a>':''}
-        ${editBtn}
+        <span style="color:#ccc;font-size:16px">›</span>
+      </a>`;
+    });
+  });
+  container.innerHTML = html || '<p style="text-align:center;color:#aaa;padding:2rem;font-style:italic">Agregá ítems con links de Maps para verlos acá</p>';
+}
+
+function cityForDate(date) {
+  for (const c of CITIES) {
+    if (c.days.some(d => d.date === date)) return c.id;
+  }
+  return CITIES[0]?.id || 'madrid';
+}
+
+// ══════════════════════════════════════════════
+//  HOTELS
+// ══════════════════════════════════════════════
+function renderHotels() {
+  const container = document.getElementById('hotels-content');
+  // Build city select options dynamically
+  const cityOpts = CITIES.map(c => `<option value="${c.id}">${c.flag||'🏙'} ${c.name}</option>`).join('');
+  document.getElementById('hm-city').innerHTML = cityOpts;
+
+  let html = '';
+  CITIES.forEach(c => {
+    const hotels = HO.filter(h => h.city === c.id);
+    if (!hotels.length) return;
+    hotels.forEach(h => {
+      const sc = h.status==='confirmed' ? 's-confirmed' : 's-pending';
+      const st = h.status==='confirmed' ? '✓ Reservado' : '◌ Pendiente';
+      html += `<div class="hotel-card">
+        <div class="hotel-head">
+          <span class="hotel-city-tag" style="background:${c.color||'#888'}22;color:${c.color||'#888'}">${c.flag||'🏙'} ${c.name}</span>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+            <div class="hotel-name">${h.name}</div>
+            <span class="item-status ${sc}">${st}</span>
+          </div>
+          ${h.checkin||h.checkout?`<div class="hotel-dates">${fmtDate(h.checkin)} → ${fmtDate(h.checkout)}</div>`:''}
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-rows">
+            ${h.address?`<span class="h-lbl">Dirección</span><span>${h.address}</span>`:''}
+            ${h.note?`<span class="h-lbl">Nota</span><span>${h.note}</span>`:''}
+          </div>
+          ${h.maps?`<a class="maps-btn" href="${h.maps}" target="_blank" style="margin-top:8px">🗺 Ver en Maps</a>`:''}
+        </div>
+        <div class="hotel-edit-bar">
+          <button class="ieb-btn ieb-edit" onclick="openHotelModal('${h.id}')">✏️ Editar</button>
+          <button class="ieb-btn ieb-del" onclick="delHotelConfirm('${h.id}')">🗑</button>
+        </div>
       </div>`;
     });
-  }
-  if(editMode) h+='<button class="add-to-day-btn" onclick="openModal(null,\''+k+'\')">+ Agregar ítem a este día</button>';
-  h+='</div>';
-  panel.innerHTML=h;
-  panel.classList.add('open');
-  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  });
+  container.innerHTML = html || '<p style="text-align:center;color:#aaa;padding:2rem;font-style:italic">Sin hoteles agregados</p>';
 }
 
-function closeDetail(){
-  document.getElementById('detail-panel').classList.remove('open');
-  document.querySelectorAll('.day-cell').forEach(c=>c.classList.remove('selected'));
-  activeDate=null;
+function fmtDate(d) {
+  if (!d) return '—';
+  const p = d.split('-');
+  return parseInt(p[2]) + ' ' + ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][parseInt(p[1])-1];
 }
 
-// ── MODAL ──
-function openModal(id,date){
-  editingId=id; editingDate=date||activeDate||'2026-11-09';
-  const ids=['edit-id','f-title','f-time','f-note','f-address','f-maps'];
-  ids.forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
-  document.getElementById('f-date').value=editingDate;
-  document.getElementById('f-type').value='visit';
-  document.getElementById('f-status').value='pending';
-  document.getElementById('modal-title').textContent=id?'Editar ítem':'Agregar ítem';
-  document.getElementById('btn-delete').style.display=id?'inline-flex':'none';
-  if(id){
-    const e=(EV[editingDate]||[]).find(x=>x.id===id);
-    if(e){
-      document.getElementById('f-type').value=e.type||'visit';
-      document.getElementById('f-title').value=e.title||'';
-      document.getElementById('f-time').value=e.time||'';
-      document.getElementById('f-status').value=e.status||'pending';
-      document.getElementById('f-note').value=e.note||'';
-      document.getElementById('f-address').value=e.address||'';
-      document.getElementById('f-maps').value=e.maps||'';
-      document.getElementById('edit-id').value=id;
+// ══════════════════════════════════════════════
+//  PHOTO
+// ══════════════════════════════════════════════
+function renderPhoto() {
+  let html = '';
+  DEFAULT_PHOTO.forEach(sec => {
+    const pClass = sec.prio==='max'?'prio-max':sec.prio==='alta'?'prio-high':'prio-med';
+    const pTxt = sec.prio==='max'?'📸 Máxima':sec.prio==='alta'?'Alta':'Media';
+    html += `<div class="photo-city-header"><span class="photo-city-name">${sec.city}</span><span class="${pClass}">${pTxt}</span></div>`;
+    html += '<div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:8px">';
+    sec.spots.forEach(s => {
+      html += `<div class="photo-spot">
+        <div class="ps-top"><span class="ps-name">${s.name}</span><span class="ps-time">${s.time}</span></div>
+        <div class="ps-desc">${s.desc}</div>
+        ${s.tip?`<div class="ps-tip">💡 ${s.tip}</div>`:''}
+        ${s.maps?`<a class="maps-btn" href="${s.maps}" target="_blank" style="margin-top:6px">🗺 Ver en Maps</a>`:''}
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('photo-content').innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  ITEM MODAL
+// ══════════════════════════════════════════════
+const TYPE_LIST = [
+  {id:'fly',icon:'✈',label:'Vuelo'},{id:'train',icon:'🚆',label:'Tren'},{id:'bus',icon:'🚌',label:'Bus'},
+  {id:'hotel',icon:'🏨',label:'Hotel'},{id:'event',icon:'⭐',label:'Evento'},
+  {id:'visit',icon:'🗺',label:'Visita'},{id:'excursion',icon:'🥾',label:'Excursión'},
+  {id:'restaurant',icon:'🍽',label:'Restó'},{id:'museum',icon:'🏛',label:'Museo'},{id:'photo',icon:'📸',label:'Foto'},
+];
+
+function renderTypeGrid() {
+  document.getElementById('type-grid').innerHTML = TYPE_LIST.map(t =>
+    `<div class="type-opt${t.id===selType?' sel':''}" onclick="pickType('${t.id}')">
+      <span class="type-opt-icon">${t.icon}</span>${t.label}
+    </div>`).join('');
+}
+
+function pickType(t) {
+  selType = t;
+  renderTypeGrid();
+}
+
+function renderStatusRow(containerId, current, setter) {
+  document.getElementById(containerId).innerHTML =
+    ['confirmed','pending'].map(s => {
+      const labels = {confirmed:'✓ Confirmado', pending:'◌ Pendiente'};
+      return `<div class="status-opt${current===s?' '+s:''}" onclick="${setter}('${s}')">${labels[s]}</div>`;
+    }).join('');
+}
+
+function pickStatus(s) { selStatus = s; renderStatusRow('im-status-row', selStatus, 'pickStatus'); }
+function pickHStatus(s) { selHStatus = s; renderStatusRow('hm-status-row', selHStatus, 'pickHStatus'); }
+
+function openItemModal(id, date) {
+  editItemId = id; editItemDate = date;
+  selType = 'visit'; selStatus = 'pending';
+  ['im-id','im-title','im-time','im-note','im-address','im-maps'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('im-date').value = date || '';
+  document.getElementById('im-title-hdr').textContent = id ? 'Editar ítem' : 'Agregar ítem';
+  document.getElementById('im-del').style.display = id ? 'block' : 'none';
+  if (id) {
+    const e = (EV[date]||[]).find(x => x.id === id);
+    if (e) {
+      selType = e.type || 'visit'; selStatus = e.status || 'pending';
+      ['title','time','note','address','maps'].forEach(f => {
+        const el = document.getElementById('im-' + f); if (el) el.value = e[f]||'';
+      });
+      document.getElementById('im-id').value = id;
     }
   }
-  document.getElementById('modal-overlay').classList.add('open');
+  renderTypeGrid();
+  renderStatusRow('im-status-row', selStatus, 'pickStatus');
+  document.getElementById('item-modal').classList.add('open');
 }
 
-function closeModal(){
-  document.getElementById('modal-overlay').classList.remove('open');
-  editingId=editingDate=null;
-}
+function closeItemModal() { document.getElementById('item-modal').classList.remove('open'); }
 
-function saveEvent(){
-  const dv=document.getElementById('f-date').value;
-  const ti=document.getElementById('f-title').value.trim();
-  if(!dv){toast('⚠ Seleccioná una fecha');return;}
-  if(!ti){toast('⚠ El título es obligatorio');return;}
-  const evt={
-    id:document.getElementById('edit-id').value||('u'+Date.now().toString(36)),
-    type:document.getElementById('f-type').value,
-    title:ti,
-    time:document.getElementById('f-time').value,
-    status:document.getElementById('f-status').value,
-    note:document.getElementById('f-note').value,
-    address:document.getElementById('f-address').value,
-    maps:document.getElementById('f-maps').value
+function saveItem() {
+  const date = document.getElementById('im-date').value || editItemDate;
+  const title = document.getElementById('im-title').value.trim();
+  if (!title) { toast('⚠ El título es obligatorio'); return; }
+  const evt = {
+    id: document.getElementById('im-id').value || ('u' + Date.now().toString(36)),
+    type: selType, title,
+    time: document.getElementById('im-time').value,
+    status: selStatus,
+    note: document.getElementById('im-note').value,
+    address: document.getElementById('im-address').value,
+    maps: document.getElementById('im-maps').value,
   };
-  if(!EV[dv]) EV[dv]=[];
-  const idx=EV[dv].findIndex(x=>x.id===evt.id);
-  if(idx>=0) EV[dv][idx]=evt; else EV[dv].push(evt);
-  persist(EV);
-  closeModal();
-  renderCal();
-  if(activeDate===dv) openDetail(parseInt(dv.split('-')[2]),EV[dv],dv);
+  if (!EV[date]) EV[date] = [];
+  const idx = EV[date].findIndex(x => x.id === evt.id);
+  if (idx >= 0) EV[date][idx] = evt; else EV[date].push(evt);
+  persist(SK.events, EV);
+  closeItemModal();
+  renderItinerary();
   toast('✓ Guardado');
 }
 
-function deleteEvent(){
-  if(!editingId||!editingDate) return;
-  if(!confirm('¿Eliminar este ítem?')) return;
-  EV[editingDate]=(EV[editingDate]||[]).filter(x=>x.id!==editingId);
-  persist(EV);
-  closeModal();
-  renderCal();
-  if(activeDate===editingDate) openDetail(parseInt(editingDate.split('-')[2]),EV[editingDate],editingDate);
+function deleteItem() {
+  if (!editItemId || !editItemDate) return;
+  delItemConfirm(editItemId, editItemDate);
+  closeItemModal();
+}
+
+function delItemConfirm(id, date) {
+  if (!confirm('¿Eliminar este ítem?')) return;
+  EV[date] = (EV[date]||[]).filter(x => x.id !== id);
+  persist(SK.events, EV);
+  renderItinerary();
   toast('🗑 Eliminado');
 }
 
-// ── EXPORTAR data.js ──
-function exportData(){
-  const lines=[];
-  lines.push('// ROADBOOK EUROPA 2026 — datos exportados');
-  lines.push('// Generado: '+new Date().toLocaleString('es-AR'));
-  lines.push('// Instrucciones: reemplazá el bloque EVENTS_BASE en index.html y privado.html');
-  lines.push('');
-  lines.push('const EVENTS_EXPORT = '+JSON.stringify(EV,null,2)+';');
-  lines.push('');
-  lines.push('// Para aplicar: abrí index.html en un editor de texto,');
-  lines.push('// buscá "const EVENTS_BASE = {" y reemplazá todo el objeto');
-  lines.push('// con el contenido de EVENTS_EXPORT de arriba.');
-  const blob=new Blob([lines.join('\n')],{type:'text/javascript'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='roadbook-data-'+new Date().toISOString().slice(0,10)+'.js';
-  a.click();
-  toast('⬇ data.js descargado');
+// ══════════════════════════════════════════════
+//  HOTEL MODAL
+// ══════════════════════════════════════════════
+function openHotelModal(id) {
+  editHotelId = id; selHStatus = 'pending';
+  ['hm-id','hm-name','hm-checkin','hm-checkout','hm-address','hm-maps','hm-note'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('hm-title-hdr').textContent = id ? 'Editar hotel' : 'Agregar hotel';
+  document.getElementById('hm-del').style.display = id ? 'block' : 'none';
+  if (id) {
+    const h = HO.find(x => x.id === id);
+    if (h) {
+      selHStatus = h.status || 'pending';
+      document.getElementById('hm-city').value = h.city || 'madrid';
+      ['name','checkin','checkout','address','maps','note'].forEach(f => {
+        const el = document.getElementById('hm-' + f); if (el) el.value = h[f]||'';
+      });
+      document.getElementById('hm-id').value = id;
+    }
+  }
+  renderStatusRow('hm-status-row', selHStatus, 'pickHStatus');
+  document.getElementById('hotel-modal').classList.add('open');
 }
 
-// ── TOAST ──
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+function closeHotelModal() { document.getElementById('hotel-modal').classList.remove('open'); }
+
+function saveHotel() {
+  const name = document.getElementById('hm-name').value.trim();
+  if (!name) { toast('⚠ El nombre es obligatorio'); return; }
+  const hotel = {
+    id: document.getElementById('hm-id').value || ('h' + Date.now().toString(36)),
+    city: document.getElementById('hm-city').value,
+    name, status: selHStatus,
+    checkin: document.getElementById('hm-checkin').value,
+    checkout: document.getElementById('hm-checkout').value,
+    address: document.getElementById('hm-address').value,
+    maps: document.getElementById('hm-maps').value,
+    note: document.getElementById('hm-note').value,
+  };
+  const idx = HO.findIndex(x => x.id === hotel.id);
+  if (idx >= 0) HO[idx] = hotel; else HO.push(hotel);
+  persist(SK.hotels, HO);
+  closeHotelModal();
+  renderHotels();
+  toast('✓ Hotel guardado');
 }
 
-// Click fuera del modal
-document.getElementById('modal-overlay').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+function deleteHotel() {
+  if (!editHotelId) return;
+  delHotelConfirm(editHotelId);
+  closeHotelModal();
+}
 
-renderCal();
+function delHotelConfirm(id) {
+  if (!confirm('¿Eliminar este hotel?')) return;
+  HO = HO.filter(x => x.id !== id);
+  persist(SK.hotels, HO);
+  renderHotels();
+  toast('🗑 Eliminado');
+}
+
+// ══════════════════════════════════════════════
+//  CITY MANAGER
+// ══════════════════════════════════════════════
+function openCM() { renderCM(); document.getElementById('cm-overlay').classList.add('open'); }
+
+function closeCM() {
+  document.getElementById('cm-overlay').classList.remove('open');
+  CITIES = load(SK.cities, DEFAULT_CITIES);
+  if (!CITIES.find(c => c.id === activeCity)) activeCity = CITIES[0]?.id;
+  renderItinerary();
+  renderHotels();
+  toast('✓ Itinerario actualizado');
+}
+
+function renderCM() {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  let html = '<div class="cm-sec">Ciudades del viaje</div>';
+
+  cities.forEach(city => {
+    html += `<div class="cm-city-card">
+      <div class="cm-city-head" onclick="toggleCMCity('${city.id}')">
+        <span class="cm-city-flag-display">${city.flag||'🏙'}</span>
+        <div class="cm-city-info">
+          <div class="cm-city-name-txt">${city.name}</div>
+          <div class="cm-city-days-count">${city.days.length} día${city.days.length!==1?'s':''}</div>
+        </div>
+        <span class="cm-chevron" id="chev-${city.id}">›</span>
+      </div>
+      <div class="cm-city-body" id="cbody-${city.id}">
+
+        <div class="cm-sub">Nombre y bandera</div>
+        <div class="cm-row2">
+          <input class="cm-flag-fi" id="cflag-${city.id}" value="${city.flag||'🏙'}" maxlength="4">
+          <input class="cm-name-fi" id="cname-${city.id}" value="${city.name}" placeholder="Nombre">
+          <button class="cm-save-btn" onclick="saveCityMeta('${city.id}')">OK</button>
+        </div>
+
+        <div class="cm-sub">Color</div>
+        <div class="cm-colors">
+          ${COLORS.map(col => `<div class="cm-swatch${city.color===col?' sel':''}" style="background:${col};border-color:${city.color===col?'var(--ink)':'transparent'}" onclick="setCityColor('${city.id}','${col}')"></div>`).join('')}
+        </div>
+
+        <div class="cm-sub">Días asignados</div>
+        <div class="cm-days" id="cdays-${city.id}">
+          ${city.days.map((d,di) => `
+            <div class="cm-day-row">
+              <input class="cm-day-label-fi" value="${d.label}" onchange="updateDayLabel('${city.id}',${di},this.value)" placeholder="Etiqueta del día">
+              <span class="cm-day-date-lbl">${d.date.slice(5)}</span>
+              <button class="cm-move-btn" title="Mover a otra ciudad" onclick="openMoveDay('${city.id}',${di},'${d.date}','${d.label.replace(/'/g,"\\'")}')">⇄</button>
+              <button class="cm-rm-btn" title="Quitar" onclick="removeDayFromCity('${city.id}',${di})">✕</button>
+            </div>`).join('')}
+        </div>
+
+        <div class="cm-sub">Agregar día</div>
+        <div class="cm-add-day">
+          <input type="date" class="cm-date-fi" id="cndate-${city.id}">
+          <input type="text" class="cm-label-fi" id="cnlabel-${city.id}" placeholder="Ej: Lun 10 — Bruselas">
+          <button class="cm-add-day-btn" onclick="addDayToCity('${city.id}')">+ Día</button>
+        </div>
+
+        <button class="cm-del-city" onclick="delCityConfirm('${city.id}')">🗑 Eliminar ciudad</button>
+      </div>
+    </div>`;
+  });
+
+  // New city form
+  html += `<div class="cm-sec" style="margin-top:8px">Nueva ciudad</div>
+  <div class="cm-new-card">
+    <div class="cm-row2">
+      <input class="cm-flag-fi" id="nc-flag" value="🏙" maxlength="4">
+      <input class="cm-name-fi" id="nc-name" placeholder="Nombre de la ciudad">
+    </div>
+    <div class="cm-sub">Color</div>
+    <div class="cm-colors" id="nc-colors">
+      ${COLORS.map((col,i) => `<div class="cm-swatch${i===0?' sel':''}" id="ncsw-${i}" style="background:${col};border-color:${i===0?'var(--ink)':'transparent'}" onclick="pickNewColor('${col}',${i})"></div>`).join('')}
+    </div>
+    <button style="width:100%;padding:10px;border-radius:10px;background:var(--navy);color:white;border:none;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit" onclick="addNewCity()">+ Agregar ciudad</button>
+  </div>`;
+
+  document.getElementById('cm-body').innerHTML = html;
+}
+
+function toggleCMCity(id) {
+  const body = document.getElementById('cbody-' + id);
+  const chev = document.getElementById('chev-' + id);
+  const wasOpen = body.classList.contains('open');
+  document.querySelectorAll('.cm-city-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.cm-chevron').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) { body.classList.add('open'); chev.classList.add('open'); }
+}
+
+function saveCityMeta(id) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const city = cities.find(c => c.id === id);
+  if (!city) return;
+  const flag = document.getElementById('cflag-' + id).value.trim();
+  const name = document.getElementById('cname-' + id).value.trim();
+  if (!name) { toast('⚠ Nombre requerido'); return; }
+  city.flag = flag || '🏙';
+  city.name = name;
+  persist(SK.cities, cities);
+  renderCM();
+  toggleCMCity(id);
+  toast('✓ Ciudad actualizada');
+}
+
+function setCityColor(id, col) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const city = cities.find(c => c.id === id);
+  if (!city) return;
+  city.color = col;
+  persist(SK.cities, cities);
+  renderCM();
+  toggleCMCity(id);
+}
+
+function pickNewColor(col, idx) {
+  newCityColor = col;
+  document.querySelectorAll('[id^="ncsw-"]').forEach((el, i) => {
+    el.classList.toggle('sel', i === idx);
+    el.style.borderColor = i === idx ? 'var(--ink)' : 'transparent';
+  });
+}
+
+function addDayToCity(id) {
+  const dateEl = document.getElementById('cndate-' + id);
+  const labelEl = document.getElementById('cnlabel-' + id);
+  const date = dateEl.value;
+  const label = labelEl.value.trim();
+  if (!date) { toast('⚠ Seleccioná una fecha'); return; }
+  if (!label) { toast('⚠ Escribí una etiqueta'); return; }
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const allDates = cities.flatMap(c => c.days.map(d => d.date));
+  if (allDates.includes(date)) {
+    const owner = cities.find(c => c.days.some(d => d.date === date));
+    toast('⚠ Esa fecha ya está en ' + (owner ? owner.name : 'otra ciudad'));
+    return;
+  }
+  const city = cities.find(c => c.id === id);
+  if (!city) return;
+  city.days.push({ date, label });
+  city.days.sort((a, b) => a.date.localeCompare(b.date));
+  persist(SK.cities, cities);
+  dateEl.value = ''; labelEl.value = '';
+  renderCM();
+  toggleCMCity(id);
+  toast('✓ Día agregado a ' + city.name);
+}
+
+function removeDayFromCity(cityId, dayIdx) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const city = cities.find(c => c.id === cityId);
+  if (!city) return;
+  const day = city.days[dayIdx];
+  if (!confirm('¿Quitar "' + day.label + '" de ' + city.name + '?\n\nLos ítems del día se conservan.')) return;
+  city.days.splice(dayIdx, 1);
+  persist(SK.cities, cities);
+  renderCM();
+  toggleCMCity(cityId);
+  toast('✓ Día removido');
+}
+
+function updateDayLabel(cityId, dayIdx, val) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const city = cities.find(c => c.id === cityId);
+  if (city && city.days[dayIdx]) { city.days[dayIdx].label = val; persist(SK.cities, cities); }
+}
+
+function openMoveDay(fromId, dayIdx, date, label) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const targets = cities.filter(c => c.id !== fromId);
+  const div = document.createElement('div');
+  div.className = 'move-overlay';
+  div.innerHTML = `<div class="move-card">
+    <div class="move-title">Mover día a...</div>
+    <div class="move-sub">${label}</div>
+    ${targets.map(c => `<button class="move-opt" onclick="moveDayToCity('${fromId}',${dayIdx},'${c.id}');document.querySelector('.move-overlay').remove()">${c.flag||'🏙'} ${c.name}</button>`).join('')}
+    <button class="move-cancel" onclick="this.closest('.move-overlay').remove()">Cancelar</button>
+  </div>`;
+  div.addEventListener('click', e => { if (e.target === div) div.remove(); });
+  document.body.appendChild(div);
+}
+
+function moveDayToCity(fromId, dayIdx, toId) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const from = cities.find(c => c.id === fromId);
+  const to = cities.find(c => c.id === toId);
+  if (!from || !to) return;
+  const [day] = from.days.splice(dayIdx, 1);
+  to.days.push(day);
+  to.days.sort((a, b) => a.date.localeCompare(b.date));
+  persist(SK.cities, cities);
+  renderCM();
+  toggleCMCity(toId);
+  toast('✓ Día movido a ' + to.name);
+}
+
+function delCityConfirm(id) {
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const city = cities.find(c => c.id === id);
+  if (!city) return;
+  if (!confirm('¿Eliminar "' + city.name + '"?\nLos ítems de sus días se conservan.')) return;
+  persist(SK.cities, cities.filter(c => c.id !== id));
+  renderCM();
+  toast('🗑 Ciudad eliminada');
+}
+
+function addNewCity() {
+  const flag = document.getElementById('nc-flag').value.trim() || '🏙';
+  const name = document.getElementById('nc-name').value.trim();
+  if (!name) { toast('⚠ Escribí el nombre'); return; }
+  const cities = load(SK.cities, DEFAULT_CITIES);
+  const id = name.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,16) || ('c' + Date.now().toString(36));
+  if (cities.find(c => c.id === id)) { toast('⚠ Ya existe una ciudad similar'); return; }
+  cities.push({ id, name, flag, color: newCityColor, days: [] });
+  persist(SK.cities, cities);
+  document.getElementById('nc-name').value = '';
+  document.getElementById('nc-flag').value = '🏙';
+  renderCM();
+  setTimeout(() => toggleCMCity(id), 80);
+  toast('✓ "' + name + '" agregada — ahora agregale días');
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+renderItinerary();
+renderHotels();
+renderPhoto();
 </script>
 </body>
 </html>
